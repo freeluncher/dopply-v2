@@ -43,10 +43,10 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             const Spacer(),
             // Logo
-            Icon(
-              Icons.favorite_rounded,
-              size: 100,
-              color: Theme.of(context).colorScheme.primary,
+            Image.asset(
+              'assets/images/icon-dopply-transparent.png',
+              width: 120,
+              height: 120,
             ),
             const SizedBox(height: 16),
             // App Name
