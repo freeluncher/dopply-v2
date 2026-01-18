@@ -1,0 +1,331 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'monitoring_controller.dart';
+import 'monitoring_state.dart';
+
+class MonitoringScreen extends ConsumerWidget {
+  final int? patientId;
+
+  const MonitoringScreen({super.key, this.patientId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(monitoringControllerProvider(patientId));
+    final controller = ref.read(
+      monitoringControllerProvider(patientId).notifier,
+    );
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Fetal Monitoring')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Connection Status (Top Bar) - Only show if granted
+            if (state.permissionStatus == PermissionStatus.granted &&
+                state.status == MonitoringStatus.idle) ...[
+              Card(
+                color:
+                    state.connectionStatus == DeviceConnectionStatus.connected
+                    ? Colors.green.shade100
+                    : Colors.orange.shade50,
+                child: ListTile(
+                  leading: Icon(
+                    state.connectionStatus == DeviceConnectionStatus.connected
+                        ? Icons.bluetooth_connected
+                        : Icons.bluetooth_disabled,
+                  ),
+                  title: Text(
+                    state.connectionStatus == DeviceConnectionStatus.connected
+                        ? "Connected to Monitor"
+                        : state.connectionStatus ==
+                              DeviceConnectionStatus.scanning
+                        ? "Scanning..."
+                        : "Device Disconnected",
+                  ),
+                  subtitle: Text(
+                    state.isSimulation
+                        ? "Using Simulation Mode"
+                        : "Real Device Connected",
+                  ),
+                  trailing:
+                      state.connectionStatus ==
+                          DeviceConnectionStatus.disconnected
+                      ? FilledButton.tonal(
+                          onPressed: controller.connectToDevice,
+                          child: const Text("Connect"),
+                        )
+                      : null,
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // Status Header
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Status: ${state.status.name.toUpperCase()}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text('Duration: ${state.durationSeconds}s'),
+                      ],
+                    ),
+                    Text(
+                      '${state.currentBpm ?? '--'} BPM',
+                      style: Theme.of(context).textTheme.displayMedium
+                          ?.copyWith(
+                            color: const Color(0xFFE91E63),
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Medical Disclaimer
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue.shade200),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.blue),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      "This app is for screening purposes only and not a substitute for professional medical advice. Always consult a doctor.",
+                      style: TextStyle(color: Colors.blue, fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Error Message
+            if (state.errorMessage != null)
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.red.shade100,
+                child: Text(
+                  state.errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+
+            // Chart
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+                ),
+                child: LineChart(
+                  LineChartData(
+                    gridData: const FlGridData(show: false),
+                    titlesData: const FlTitlesData(show: false),
+                    borderData: FlBorderData(
+                      show: true,
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    minX: 0,
+                    maxX: 60, // Show last 60 points
+                    minY: 60,
+                    maxY: 200,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: state.bpmData.asMap().entries.map((e) {
+                          // If data grows large, we might want to slice connecting line
+                          // For now show all
+                          return FlSpot(e.key.toDouble(), e.value.toDouble());
+                        }).toList(),
+                        isCurved: true,
+                        color: const Color(0xFFE91E63),
+                        barWidth: 3,
+                        dotData: const FlDotData(show: false),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Controls Logic based on Permission
+            if (state.status == MonitoringStatus.idle ||
+                state.status == MonitoringStatus.completed)
+              _buildIdleControls(context, controller, state),
+
+            if (state.status == MonitoringStatus.monitoring)
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: controller.stopMonitoring,
+                  icon: const Icon(Icons.stop),
+                  label: const Text('Stop Recording'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                ),
+              ),
+
+            if (state.status == MonitoringStatus.completed)
+              _buildSaveButton(context, controller, state),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIdleControls(
+    BuildContext context,
+    MonitoringController controller,
+    MonitoringState state,
+  ) {
+    if (state.permissionStatus == PermissionStatus.granted) {
+      return SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: controller.startMonitoring,
+          icon: const Icon(Icons.play_arrow),
+          label: const Text('Start Recording'),
+          style: FilledButton.styleFrom(padding: const EdgeInsets.all(16)),
+        ),
+      );
+    } else if (state.permissionStatus == PermissionStatus.pending) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        color: Colors.orange.shade50,
+        child: Column(
+          children: [
+            const Icon(Icons.hourglass_empty, color: Colors.orange, size: 48),
+            const SizedBox(height: 12),
+            Text(
+              "Waiting For Doctor Approval",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const Text(
+              "A request has been sent to your doctor.",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    } else if (state.permissionStatus == PermissionStatus.none) {
+      return SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: controller.requestPermission,
+          icon: const Icon(Icons.lock_open),
+          label: const Text('Request Permission to Monitor'),
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.all(16),
+            backgroundColor: Colors.orange,
+          ),
+        ),
+      );
+    } else {
+      // Loading
+      return const Center(child: CircularProgressIndicator());
+    }
+  }
+
+  Widget _buildSaveButton(
+    BuildContext context,
+    MonitoringController controller,
+    MonitoringState state,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: () async {
+            String? notes;
+
+            // If Doctor Mode (patientId provided), ask for notes
+            if (patientId != null) {
+              notes = await showDialog<String>(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  final notesController = TextEditingController();
+                  return AlertDialog(
+                    title: const Text('Doctor Analysis'),
+                    content: TextField(
+                      controller: notesController,
+                      decoration: const InputDecoration(
+                        labelText: 'Enter clinical notes...',
+                        hintText: 'e.g., Normal FHR, localized movement',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Skip'),
+                      ),
+                      FilledButton(
+                        onPressed: () =>
+                            Navigator.pop(context, notesController.text),
+                        child: const Text('Save Record'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+
+            try {
+              await controller.saveRecord(notes: notes);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Record saved successfully!')),
+                );
+                context.pop();
+              }
+            } catch (e) {
+              if (context.mounted) {
+                if (e.toString().contains('Patient profile not found')) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please create a patient profile first.'),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('Error: $e')));
+                }
+              }
+            }
+          },
+          icon: const Icon(Icons.save),
+          label: const Text('Save Record'),
+          style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
+        ),
+      ),
+    );
+  }
+}
