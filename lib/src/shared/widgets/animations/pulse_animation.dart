@@ -52,12 +52,11 @@ class _PulseAnimationState extends State<PulseAnimation>
   @override
   void initState() {
     super.initState();
-    _initAnimation();
+    _createController();
   }
 
-  void _initAnimation() {
+  void _createController() {
     final bpm = widget.bpm ?? 80;
-    // Convert BPM to duration (60000ms / bpm)
     final durationMs = (60000 / bpm).round();
 
     _controller = AnimationController(
@@ -79,10 +78,15 @@ class _PulseAnimationState extends State<PulseAnimation>
   void didUpdateWidget(PulseAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Update animation if BPM changes significantly
+    // Update animation duration if BPM changes
     if (widget.bpm != oldWidget.bpm) {
-      _controller.dispose();
-      _initAnimation();
+      final bpm = widget.bpm ?? 80;
+      final durationMs = (60000 / bpm).round();
+      _controller.duration = Duration(milliseconds: durationMs);
+
+      if (widget.isAnimating) {
+        _controller.repeat(reverse: true);
+      }
     }
 
     // Handle animation state changes

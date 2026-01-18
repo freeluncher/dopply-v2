@@ -51,6 +51,8 @@ class MonitoringController extends StateNotifier<MonitoringState> {
   }
 
   // PERMISSION LOGIC
+  StreamSubscription? _requestsSubscription;
+
   Future<void> _initPermission() async {
     if (_patientId != null) {
       // Doctor mode: Always Granted
@@ -58,7 +60,6 @@ class MonitoringController extends StateNotifier<MonitoringState> {
       return;
     }
 
-    // Patient mode: Check DB
     try {
       state = state.copyWith(permissionStatus: PermissionStatus.loading);
       final user = Supabase.instance.client.auth.currentUser;
@@ -78,33 +79,45 @@ class MonitoringController extends StateNotifier<MonitoringState> {
 
       final patientId = patient['id'];
 
-      // Check for approved request
-      final response = await Supabase.instance.client
+      // Setup Realtime Subscription
+      _requestsSubscription?.cancel();
+      _requestsSubscription = Supabase.instance.client
           .from('monitoring_requests')
-          .select('status')
+          .stream(primaryKey: ['id'])
           .eq('patient_id', patientId)
-          .eq('status', 'approved')
           .order('created_at', ascending: false)
           .limit(1)
-          .maybeSingle();
+          .listen(
+            (List<Map<String, dynamic>> data) {
+              if (!mounted) return;
 
-      if (response != null && response['status'] == 'approved') {
-        state = state.copyWith(permissionStatus: PermissionStatus.granted);
-      } else {
-        // Check if pending
-        final pending = await Supabase.instance.client
-            .from('monitoring_requests')
-            .select('status')
-            .eq('patient_id', patientId)
-            .eq('status', 'pending')
-            .maybeSingle();
+              if (data.isEmpty) {
+                state = state.copyWith(permissionStatus: PermissionStatus.none);
+                return;
+              }
 
-        if (pending != null) {
-          state = state.copyWith(permissionStatus: PermissionStatus.pending);
-        } else {
-          state = state.copyWith(permissionStatus: PermissionStatus.none);
-        }
-      }
+              final latestRequest = data.first;
+              final status = latestRequest['status'];
+
+              if (status == 'approved') {
+                state = state.copyWith(
+                  permissionStatus: PermissionStatus.granted,
+                );
+              } else if (status == 'pending') {
+                state = state.copyWith(
+                  permissionStatus: PermissionStatus.pending,
+                );
+              } else {
+                // rejected or completed
+                state = state.copyWith(permissionStatus: PermissionStatus.none);
+              }
+            },
+            onError: (err) {
+              if (mounted) {
+                state = state.copyWith(errorMessage: 'Realtime Error: $err');
+              }
+            },
+          );
     } catch (e) {
       state = state.copyWith(errorMessage: 'Error checking permission: $e');
     }
@@ -375,6 +388,7 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     _timer?.cancel();
     _bpmSubscription?.cancel();
     _connectionStateSubscription?.cancel();
+    _requestsSubscription?.cancel();
     _adapterStateSubscription?.cancel();
     _repository.bleRepository.disconnect();
     super.dispose();
