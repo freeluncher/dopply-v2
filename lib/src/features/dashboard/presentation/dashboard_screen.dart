@@ -8,6 +8,7 @@ import '../../../core/services/update_service.dart';
 import '../../shared/widgets/update_dialog.dart';
 
 import 'doctor_requests_screen.dart';
+import '../../../core/error/error_handler.dart';
 // ... (keep earlier imports)
 
 // Controller to fetch user profile
@@ -76,6 +77,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Global Error Listener
+    ref.listen(errorStreamProvider, (previous, next) {
+      next.whenData((failure) {
+        if (!context.mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(failure.message),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'Dismiss',
+              textColor: Colors.white,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ),
+        );
+      });
+    });
+
     final profileAsync = ref.watch(userProfileProvider);
 
     return Scaffold(
