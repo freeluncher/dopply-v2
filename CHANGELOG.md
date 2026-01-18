@@ -2,7 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-01-19
+
+### Added
+- **UI/UX Improvements**:
+  - Implemented "Soft & Organic" design language with dynamic background blobs and softer shadows.
+  - Enhanced visual feedback for Bluetooth connection and Heartrate visualization (`PulseAnimation`).
+  - Improved Empty States and Error Widgets for better user guidance.
+- **Realtime Updates**:
+  - Implemented client-side Realtime Listener for Monitoring Permissions. Patients now see status changes instantly without refreshing.
+- **Backend**:
+  - Added Supabase Edge Function (`supabase/functions/push-notification`) to handle FCM Push Notifications.
+
+### Fixed
+- **Critical Crash**: Fixed `PulseAnimation` crash (`Multiple tickers created`) when BPM changes or animation restarts.
+- **Build Optimization**: Resolved Gradle warnings (`obsolete options`, `incremental caches`) for smoother Android builds.
+
 ## [1.1.0] - 2026-01-19
+
 
 ### Added
 - **Admin Panel Enhancements**:
