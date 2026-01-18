@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'monitoring_controller.dart';
 import 'monitoring_state.dart';
+import '../../../core/theme/app_typography.dart';
+import '../../../shared/widgets/widgets.dart';
 
 class MonitoringScreen extends ConsumerWidget {
   final int? patientId;
@@ -26,38 +28,33 @@ class MonitoringScreen extends ConsumerWidget {
             // Connection Status (Top Bar) - Only show if granted
             if (state.permissionStatus == PermissionStatus.granted &&
                 state.status == MonitoringStatus.idle) ...[
+              // Connection Status Card with new UX
               Card(
-                color:
-                    state.connectionStatus == DeviceConnectionStatus.connected
-                    ? Colors.green.shade100
-                    : Colors.orange.shade50,
-                child: ListTile(
-                  leading: Icon(
-                    state.connectionStatus == DeviceConnectionStatus.connected
-                        ? Icons.bluetooth_connected
-                        : Icons.bluetooth_disabled,
-                  ),
-                  title: Text(
-                    state.connectionStatus == DeviceConnectionStatus.connected
-                        ? "Connected to Monitor"
-                        : state.connectionStatus ==
-                              DeviceConnectionStatus.scanning
-                        ? "Scanning..."
-                        : "Device Disconnected",
-                  ),
-                  subtitle: Text(
-                    state.isSimulation
-                        ? "Using Simulation Mode"
-                        : "Real Device Connected",
-                  ),
-                  trailing:
-                      state.connectionStatus ==
-                          DeviceConnectionStatus.disconnected
-                      ? FilledButton.tonal(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      ConnectionIndicator(
+                        isConnected:
+                            state.connectionStatus ==
+                            DeviceConnectionStatus.connected,
+                        isConnecting:
+                            state.connectionStatus ==
+                            DeviceConnectionStatus.scanning,
+                        deviceName: state.isSimulation
+                            ? 'Simulation Mode'
+                            : 'Doppler Monitor',
+                        size: ConnectionIndicatorSize.large,
+                      ),
+                      const Spacer(),
+                      if (state.connectionStatus ==
+                          DeviceConnectionStatus.disconnected)
+                        FilledButton.tonal(
                           onPressed: controller.connectToDevice,
-                          child: const Text("Connect"),
-                        )
-                      : null,
+                          child: const Text('Connect'),
+                        ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -80,13 +77,25 @@ class MonitoringScreen extends ConsumerWidget {
                         Text('Duration: ${state.durationSeconds}s'),
                       ],
                     ),
-                    Text(
-                      '${state.currentBpm ?? '--'} BPM',
-                      style: Theme.of(context).textTheme.displayMedium
-                          ?.copyWith(
-                            color: const Color(0xFFE91E63),
-                            fontWeight: FontWeight.bold,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        PulseAnimation(
+                          bpm: state.currentBpm,
+                          isAnimating:
+                              state.status == MonitoringStatus.monitoring,
+                          child: Text(
+                            '${state.currentBpm ?? '--'}',
+                            style: AppTypography.bpmDisplay,
                           ),
+                        ),
+                        Text('BPM', style: AppTypography.bpmUnit),
+                        if (state.currentBpm != null)
+                          BpmStatusIndicator(
+                            bpm: state.currentBpm,
+                            size: BpmIndicatorSize.small,
+                          ),
+                      ],
                     ),
                   ],
                 ),
@@ -117,16 +126,9 @@ class MonitoringScreen extends ConsumerWidget {
               ),
             ),
 
-            // Error Message
+            // Error Message with Soft Error Widget
             if (state.errorMessage != null)
-              Container(
-                padding: const EdgeInsets.all(8),
-                color: Colors.red.shade100,
-                child: Text(
-                  state.errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
+              SoftErrorWidget(message: state.errorMessage!, isInline: true),
 
             // Chart
             Expanded(
@@ -205,7 +207,15 @@ class MonitoringScreen extends ConsumerWidget {
       return SizedBox(
         width: double.infinity,
         child: FilledButton.icon(
-          onPressed: controller.startMonitoring,
+          onPressed: () async {
+            // Show medical disclaimer before first monitoring
+            final accepted = await MedicalDisclaimerDialog.showIfNeeded(
+              context,
+            );
+            if (accepted && context.mounted) {
+              controller.startMonitoring();
+            }
+          },
           icon: const Icon(Icons.play_arrow),
           label: const Text('Start Recording'),
           style: FilledButton.styleFrom(padding: const EdgeInsets.all(16)),
@@ -245,8 +255,10 @@ class MonitoringScreen extends ConsumerWidget {
         ),
       );
     } else {
-      // Loading
-      return const Center(child: CircularProgressIndicator());
+      // Loading with Breathing Loader
+      return const Center(
+        child: BreathingLoader(size: 60, message: 'Memuat...'),
+      );
     }
   }
 

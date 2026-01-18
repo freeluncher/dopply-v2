@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/widgets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -36,41 +38,67 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            // Logo
-            Image.asset(
-              'assets/images/logo-dopply.png',
-              width: 150, // Slightly larger as it might be a full logo
-              height: 150,
+      backgroundColor: AppColors.background,
+      body: Stack(
+        children: [
+          // Organic Background with animated waves
+          const Positioned.fill(child: OrganicBackground(animate: true)),
+          // Content
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                // Logo with soft glow
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.2),
+                        blurRadius: 40,
+                        spreadRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    'assets/images/logo-dopply.png',
+                    width: 150,
+                    height: 150,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // App Name
+                Text(
+                  'Dopply',
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Advanced Fetal Monitoring',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const Spacer(),
+                // Loading indicator
+                const BreathingLoader(size: 40),
+                const SizedBox(height: 24),
+                // Version
+                if (_version.isNotEmpty)
+                  Text(
+                    _version,
+                    style: TextStyle(color: AppColors.textTertiary),
+                  ),
+                const SizedBox(height: 32),
+              ],
             ),
-            const SizedBox(height: 16),
-            // App Name
-            Text(
-              'Dopply',
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Advanced Fetal Monitoring',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
-            ),
-            const Spacer(),
-            // Version
-            if (_version.isNotEmpty)
-              Text(_version, style: const TextStyle(color: Colors.grey)),
-            const SizedBox(height: 32),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
