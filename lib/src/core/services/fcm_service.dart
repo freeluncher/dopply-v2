@@ -46,11 +46,19 @@ class FcmService {
     // 5. Foreground Messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log('Got a message whilst in the foreground!');
-      log('Message data: ${message.data}');
-
       if (message.notification != null) {
         log('Message also contained a notification: ${message.notification}');
-        // Here we could show a local notification or use a SnackBar if we had context
+      }
+    });
+
+    // 6. Listen for Auth Changes (Sync token after login)
+    _supabase.auth.onAuthStateChange.listen((data) async {
+      if (data.event == AuthChangeEvent.signedIn) {
+        log('User signed in, syncing FCM token...');
+        final token = await _firebaseMessaging.getToken();
+        if (token != null) {
+          await _saveTokenToDatabase(token);
+        }
       }
     });
   }
