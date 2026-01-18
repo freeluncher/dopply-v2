@@ -75,6 +75,60 @@ final recordsProvider = StreamProvider.family
       }
     });
 
+final recordSearchProvider = StateProvider.autoDispose<String>((ref) => '');
+
+enum RecordSortOption { dateDesc, dateAsc, bpmDesc, bpmAsc }
+
+final recordSortProvider = StateProvider.autoDispose<RecordSortOption>(
+  (ref) => RecordSortOption.dateDesc,
+);
+
+final filteredRecordsProvider = Provider.family
+    .autoDispose<AsyncValue<List<Map<String, dynamic>>>, int?>((
+      ref,
+      patientId,
+    ) {
+      final recordsAsync = ref.watch(recordsProvider(patientId));
+      final searchQuery = ref.watch(recordSearchProvider).toLowerCase();
+      final sortOption = ref.watch(recordSortProvider);
+
+      return recordsAsync.whenData((records) {
+        var filtered = records;
+
+        // 1. Filter
+        if (searchQuery.isNotEmpty) {
+          filtered = filtered.where((record) {
+            final classification = (record['classification'] ?? '')
+                .toString()
+                .toLowerCase();
+            final notes = (record['notes'] ?? '').toString().toLowerCase();
+            return classification.contains(searchQuery) ||
+                notes.contains(searchQuery);
+          }).toList();
+        }
+
+        // 2. Sort
+        filtered.sort((a, b) {
+          switch (sortOption) {
+            case RecordSortOption.dateDesc:
+              return b['created_at'].compareTo(a['created_at']);
+            case RecordSortOption.dateAsc:
+              return a['created_at'].compareTo(b['created_at']);
+            case RecordSortOption.bpmDesc:
+              return (b['average_bpm'] as num).compareTo(
+                a['average_bpm'] as num,
+              );
+            case RecordSortOption.bpmAsc:
+              return (a['average_bpm'] as num).compareTo(
+                b['average_bpm'] as num,
+              );
+          }
+        });
+
+        return filtered;
+      });
+    });
+
 class RecordsScreen extends ConsumerWidget {
   final int? patientId; // Optional: if provided, shows records for this patient
 
@@ -83,16 +137,82 @@ class RecordsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Pass the patientId (null or value) to the provider
-    final recordsAsync = ref.watch(recordsProvider(patientId));
+    final recordsAsync = ref.watch(filteredRecordsProvider(patientId));
 
     return Scaffold(
       appBar: AppBar(
         title: Text(patientId == null ? 'My History' : 'Patient History'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search (e.g. Normal, Notes)',
+                      prefixIcon: const Icon(Icons.search),
+                      filled: true,
+                      fillColor: Theme.of(context).cardColor,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear, size: 20),
+                        onPressed: () {
+                          ref.read(recordSearchProvider.notifier).state = '';
+                        },
+                      ),
+                    ),
+                    onChanged: (value) {
+                      ref.read(recordSearchProvider.notifier).state = value;
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                PopupMenuButton<RecordSortOption>(
+                  icon: const Icon(Icons.sort),
+                  onSelected: (option) {
+                    ref.read(recordSortProvider.notifier).state = option;
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: RecordSortOption.dateDesc,
+                      child: Text('Newest First'),
+                    ),
+                    const PopupMenuItem(
+                      value: RecordSortOption.dateAsc,
+                      child: Text('Oldest First'),
+                    ),
+                    const PopupMenuItem(
+                      value: RecordSortOption.bpmDesc,
+                      child: Text('BPM (High to Low)'),
+                    ),
+                    const PopupMenuItem(
+                      value: RecordSortOption.bpmAsc,
+                      child: Text('BPM (Low to High)'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: recordsAsync.when(
         data: (records) {
           if (records.isEmpty) {
-            return const Center(child: Text('No records found.'));
+            final isSearching = ref.read(recordSearchProvider).isNotEmpty;
+            return Center(
+              child: Text(
+                isSearching
+                    ? 'No records match your search.'
+                    : 'No records found.',
+              ),
+            );
           }
           return ListView.builder(
             itemCount: records.length,
@@ -100,7 +220,8 @@ class RecordsScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final record = records[index];
               final date = DateTime.parse(record['start_time']);
-              final avgBpm = (record['average_bpm'] as num).toDouble();
+              // Handle potential null or int/double differences safely
+              final avgBpm = ((record['average_bpm'] ?? 0) as num).toDouble();
               final classification = record['classification'];
 
               return Card(

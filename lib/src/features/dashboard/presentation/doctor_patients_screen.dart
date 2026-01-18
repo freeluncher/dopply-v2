@@ -38,45 +38,106 @@ final doctorPatientsProvider =
           });
     });
 
+final patientSearchProvider = StateProvider.autoDispose<String>((ref) => '');
+
+final filteredPatientsProvider =
+    Provider.autoDispose<AsyncValue<List<Map<String, dynamic>>>>((ref) {
+      final searchQuery = ref.watch(patientSearchProvider).toLowerCase();
+      final patientsAsync = ref.watch(doctorPatientsProvider);
+
+      return patientsAsync.whenData((patients) {
+        if (searchQuery.isEmpty) return patients;
+        return patients.where((item) {
+          final patient = item['patients'] as Map<String, dynamic>;
+          final name = (patient['name'] ?? '').toString().toLowerCase();
+          // You can add email search if email is available in the patient map
+          return name.contains(searchQuery);
+        }).toList();
+      });
+    });
+
 class DoctorPatientsScreen extends ConsumerWidget {
   const DoctorPatientsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final patientsAsync = ref.watch(doctorPatientsProvider);
+    final patientsAsync = ref.watch(filteredPatientsProvider);
+    // Removed unused controller. Using onChanged for simplicity.
 
     return Scaffold(
       appBar: AppBar(title: const Text('My Patients')),
-      body: patientsAsync.when(
-        data: (data) {
-          if (data.isEmpty) {
-            return const Center(child: Text('No patients assigned yet.'));
-          }
-          return ListView.builder(
-            itemCount: data.length,
-            padding: const EdgeInsets.all(16),
-            itemBuilder: (context, index) {
-              final item = data[index];
-              final patient = item['patients'] as Map<String, dynamic>;
-              // assigned_at is in top level item
-
-              return Card(
-                child: ListTile(
-                  leading: const CircleAvatar(child: Icon(Icons.person)),
-                  title: Text(patient['name'] ?? 'Unknown'),
-                  subtitle: Text('HPHT: ${patient['hpht'] ?? 'N/A'}'),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () {
-                    // Navigate to details/records for this patient
-                    context.push('/patients/${patient['id']}');
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Search Patients',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    ref.read(patientSearchProvider.notifier).state = '';
+                    // Also clear text field locally if using controller
+                    // But for simplicity in this stateless widget:
+                    // If we want to clear the field visually, we might need stateful or controller management.
+                    // Let's rely on onChanged update.
                   },
                 ),
-              );
-            },
-          );
-        },
-        error: (err, stack) => Center(child: Text('Error: $err')),
-        loading: () => const Center(child: CircularProgressIndicator()),
+              ),
+              onChanged: (value) {
+                ref.read(patientSearchProvider.notifier).state = value;
+              },
+            ),
+          ),
+          Expanded(
+            child: patientsAsync.when(
+              data: (data) {
+                if (data.isEmpty) {
+                  // Check if it's empty because of search or no patients at all
+                  final isSearching = ref
+                      .read(patientSearchProvider)
+                      .isNotEmpty;
+                  return Center(
+                    child: Text(
+                      isSearching
+                          ? 'No patients found matching "${ref.read(patientSearchProvider)}"'
+                          : 'No patients assigned yet.',
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: data.length,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = data[index];
+                    final patient = item['patients'] as Map<String, dynamic>;
+
+                    return Card(
+                      child: ListTile(
+                        leading: const CircleAvatar(child: Icon(Icons.person)),
+                        title: Text(patient['name'] ?? 'Unknown'),
+                        subtitle: Text('HPHT: ${patient['hpht'] ?? 'N/A'}'),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        onTap: () {
+                          context.push('/patients/${patient['id']}');
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+              error: (err, stack) => Center(child: Text('Error: $err')),
+              loading: () => const Center(child: CircularProgressIndicator()),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddPatientDialog(context, ref),
