@@ -74,3 +74,5 @@ lib/generated_plugin_registrant.dart
 google-services.json
 GoogleService-Info.plist
 supabase-secrets.json
+device-streaming-fdeb112c-firebase-adminsdk-f3akd-5b9d4994a4.json
+setup_notifications.md
