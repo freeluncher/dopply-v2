@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ],
                   ),
                   child: Image.asset(
-                    'assets/images/logo-dopply.png',
+                    'assets/images/logo-dopply-transparent.png',
                     width: 150,
                     height: 150,
                   ),
