@@ -44,9 +44,9 @@ class _SplashScreenState extends State<SplashScreen> {
             const Spacer(),
             // Logo
             Image.asset(
-              'assets/images/icon-dopply-transparent.png',
-              width: 120,
-              height: 120,
+              'assets/images/logo-dopply.png',
+              width: 150, // Slightly larger as it might be a full logo
+              height: 150,
             ),
             const SizedBox(height: 16),
             // App Name
