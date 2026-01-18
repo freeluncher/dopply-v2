@@ -4,7 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../auth/data/auth_repository.dart';
 import '../../notifications/presentation/notification_bell.dart';
+import '../../../core/services/update_service.dart';
+import '../../shared/widgets/update_dialog.dart';
+
 import 'doctor_requests_screen.dart';
+// ... (keep earlier imports)
 
 // Controller to fetch user profile
 final userProfileProvider = FutureProvider.autoDispose<Map<String, dynamic>>((
@@ -41,11 +45,37 @@ final userProfileProvider = FutureProvider.autoDispose<Map<String, dynamic>>((
   return profile;
 });
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdates();
+    });
+  }
+
+  Future<void> _checkForUpdates() async {
+    final updateService = UpdateService();
+    // In production, consider triggering this only once per session or day
+    final release = await updateService.checkForUpdate();
+    if (release != null && mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => UpdateDialog(releaseInfo: release),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final profileAsync = ref.watch(userProfileProvider);
 
     return Scaffold(
