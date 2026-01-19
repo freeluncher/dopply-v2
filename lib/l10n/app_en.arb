@@ -1,0 +1,130 @@
+{
+  "@@locale": "en",
+  
+  "appTitle": "Dopply",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "appTagline": "Advanced Fetal Monitoring",
+  
+  "dashboardTitle": "Dopply Dashboard",
+  "monitoringTitle": "Fetal Monitoring",
+  "myHistory": "My History",
+  "myPatients": "My Patients",
+  "adminPanel": "Admin Panel",
+  "notifications": "Notifications",
+  "profile": "Profile",
+  "requests": "Requests",
+  
+  "startRecording": "Start Recording",
+  "stopRecording": "Stop Recording",
+  "saveRecord": "Save Record",
+  "connect": "Connect",
+  "disconnect": "Disconnect",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "accept": "Accept",
+  "dismiss": "Dismiss",
+  "skip": "Skip",
+  "logout": "Log Out",
+  
+  "connectionStatus": "Connection Status",
+  "connected": "Connected to Monitor",
+  "disconnected": "Device Disconnected",
+  "scanning": "Scanning...",
+  "simulationMode": "Using Simulation Mode",
+  "realDevice": "Real Device Connected",
+  "dopplerMonitor": "Doppler Monitor",
+  
+  "bpmLabel": "BPM",
+  "statusLabel": "Status: {status}",
+  "@statusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "durationSeconds": "Duration: {seconds}s",
+  "@durationSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "requestPermissionToMonitor": "Request Permission to Monitor",
+  "waitingForDoctorApproval": "Waiting For Doctor Approval",
+  "requestSentToDoctor": "A request has been sent to your doctor.",
+  
+  "medicalDisclaimerTitle": "Medical Disclaimer",
+  "medicalDisclaimerSubtitle": "Important Information",
+  "medicalDisclaimerContent": "This app is for screening purposes only and not a substitute for professional medical advice. Always consult a doctor.",
+  "disclaimerPoint1": "This device is a screening tool only",
+  "disclaimerPoint2": "Not FDA approved for medical diagnosis",
+  "disclaimerPoint3": "Always consult your doctor for medical advice",
+  "disclaimerPoint4": "Seek immediate help if you notice concerning symptoms",
+  "iUnderstand": "I Understand",
+  "iUnderstandAndAccept": "I Understand and Accept",
+  
+  "helloUser": "Hello, {name}",
+  "@helloUser": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roleLabel": "Role: {role}",
+  "@roleLabel": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "profileIncomplete": "Profile Incomplete",
+  "completeProfileMessage": "You must complete your patient profile before you can use the application.",
+  "completeProfileNow": "Complete Profile Now",
+  "assignedDoctor": "Assigned Doctor",
+  "requestDoctorTransfer": "Request Doctor Transfer",
+  
+  "error": "Error",
+  "errorOccurred": "An error occurred",
+  "errorLoadProfile": "Failed to Load",
+  "errorNetwork": "Network Error",
+  "errorBluetooth": "Bluetooth Error",
+  "errorPermission": "Permission Denied",
+  "connectionLost": "Connection lost",
+  "tryAgain": "Try again",
+  "checkConnection": "Please check your internet connection",
+  
+  "loading": "Loading...",
+  "loadingProfile": "Loading profile...",
+  "loadingData": "Loading data...",
+  "connectingDevice": "Connecting device...",
+  "pleaseWait": "Please wait...",
+  
+  "noRecordsYet": "No Records Yet",
+  "noRecordsMessage": "Start your first monitoring session to see results here",
+  "startMonitoring": "Start Monitoring",
+  "noPatientsYet": "No Patients Yet",
+  "noPatientsMessage": "Patients assigned to you will appear here",
+  "noNotifications": "No Notifications",
+  "noNotificationsMessage": "You're all caught up!",
+  
+  "status": "Status",
+  "duration": "Duration",
+  "date": "Date",
+  "time": "Time",
+  "notes": "Notes",
+  "save": "Save",
+  "edit": "Edit",
+  "delete": "Delete",
+  "search": "Search",
+  "filter": "Filter",
+  "sort": "Sort"
+}
