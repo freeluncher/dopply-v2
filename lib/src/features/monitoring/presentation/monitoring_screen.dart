@@ -8,17 +8,65 @@ import 'monitoring_state.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/widgets.dart';
 
-class MonitoringScreen extends ConsumerWidget {
+class MonitoringScreen extends ConsumerStatefulWidget {
   final int? patientId;
 
   const MonitoringScreen({super.key, this.patientId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(monitoringControllerProvider(patientId));
+  ConsumerState<MonitoringScreen> createState() => _MonitoringScreenState();
+}
+
+class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
+  final ScrollController _scrollController = ScrollController();
+  bool _shouldAutoScroll = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Detect user scrolling to disable auto-scroll
+    _scrollController.addListener(() {
+      if (!_scrollController.hasClients) return;
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final currentScroll = _scrollController.offset;
+      // If user scrolls away from right edge (more than 50px), stop auto-scrolling
+      if (maxScroll - currentScroll > 50) {
+        _shouldAutoScroll = false;
+      } else {
+        _shouldAutoScroll = true;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(monitoringControllerProvider(widget.patientId));
     final controller = ref.read(
-      monitoringControllerProvider(patientId).notifier,
+      monitoringControllerProvider(widget.patientId).notifier,
     );
+
+    // Smart Auto-Scroll Trigger
+    ref.listen(monitoringControllerProvider(widget.patientId), (prev, next) {
+      if (next.bpmData.length > (prev?.bpmData.length ?? 0)) {
+        if (_shouldAutoScroll) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollController.hasClients) {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            }
+          });
+        }
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(title: const Text('Fetal Monitoring')),
@@ -139,45 +187,65 @@ class MonitoringScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
                 ),
-                child: LineChart(
-                  LineChartData(
-                    clipData:
-                        const FlClipData.all(), // Fix: Prevent drawing outside
-                    gridData: const FlGridData(show: false),
-                    titlesData: const FlTitlesData(show: false),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(color: Colors.black12),
-                    ),
-                    minX: 0,
-                    maxX: max(
-                      60,
-                      state.bpmData.length.toDouble(),
-                    ), // Dynamic scrolling
-                    minY: 50, // Fix: Lower bound to seeing low bpm
-                    maxY: 200,
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: state.bpmData
-                            .asMap()
-                            .entries
-                            .where(
-                              (e) => e.value > 30,
-                            ) // Fix: Filter noise (0s)
-                            .map((e) {
-                              return FlSpot(
-                                e.key.toDouble(),
-                                e.value.toDouble(),
-                              );
-                            })
-                            .toList(),
-                        isCurved: true,
-                        color: const Color(0xFFE91E63),
-                        barWidth: 3,
-                        dotData: const FlDotData(show: false),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final chartAreaWidth = constraints.maxWidth;
+                    const pointsOnScreen = 60;
+                    final pixelsPerPoint = chartAreaWidth / pointsOnScreen;
+
+                    final dataLength = state.bpmData.length;
+                    final contentWidth = max(
+                      chartAreaWidth,
+                      dataLength * pixelsPerPoint,
+                    );
+
+                    return SingleChildScrollView(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      // Prevent bouncing physics if content fits
+                      physics: contentWidth > chartAreaWidth
+                          ? const BouncingScrollPhysics()
+                          : const ClampingScrollPhysics(),
+                      child: SizedBox(
+                        width: contentWidth,
+                        child: LineChart(
+                          LineChartData(
+                            clipData: const FlClipData.all(),
+                            gridData: const FlGridData(show: false),
+                            titlesData: const FlTitlesData(show: false),
+                            borderData: FlBorderData(
+                              show: true,
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            minX: 0,
+                            // Ensure maxX matches width scaling
+                            maxX: max(60, dataLength.toDouble()),
+                            minY: 50,
+                            maxY: 200,
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: state.bpmData
+                                    .asMap()
+                                    .entries
+                                    .where((e) => e.value > 30)
+                                    .map((e) {
+                                      return FlSpot(
+                                        e.key.toDouble(),
+                                        e.value.toDouble(),
+                                      );
+                                    })
+                                    .toList(),
+                                isCurved: true,
+                                color: const Color(0xFFE91E63),
+                                barWidth: 3,
+                                dotData: const FlDotData(show: false),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -289,7 +357,7 @@ class MonitoringScreen extends ConsumerWidget {
             String? notes;
 
             // If Doctor Mode (patientId provided), ask for notes
-            if (patientId != null) {
+            if (widget.patientId != null) {
               notes = await showDialog<String>(
                 context: context,
                 barrierDismissible: false,
