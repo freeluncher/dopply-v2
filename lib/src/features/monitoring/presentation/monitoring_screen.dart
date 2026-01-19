@@ -7,6 +7,7 @@ import 'monitoring_controller.dart';
 import 'monitoring_state.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class MonitoringScreen extends ConsumerStatefulWidget {
   final int? patientId;
@@ -46,6 +47,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(monitoringControllerProvider(widget.patientId));
     final controller = ref.read(
       monitoringControllerProvider(widget.patientId).notifier,
@@ -91,8 +93,8 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                             state.connectionStatus ==
                             DeviceConnectionStatus.scanning,
                         deviceName: state.isSimulation
-                            ? 'Simulation Mode'
-                            : 'Doppler Monitor',
+                            ? l10n.simulationMode
+                            : l10n.dopplerMonitor,
                         size: ConnectionIndicatorSize.large,
                       ),
                       const Spacer(),
@@ -100,7 +102,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                           DeviceConnectionStatus.disconnected)
                         FilledButton.tonal(
                           onPressed: controller.connectToDevice,
-                          child: const Text('Connect'),
+                          child: Text(l10n.connect),
                         ),
                     ],
                   ),
@@ -120,10 +122,10 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Status: ${state.status.name.toUpperCase()}',
+                          l10n.statusLabel(state.status.name.toUpperCase()),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text('Duration: ${state.durationSeconds}s'),
+                        Text(l10n.durationSeconds(state.durationSeconds)),
                       ],
                     ),
                     Column(
@@ -137,7 +139,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                             style: AppTypography.bpmDisplay,
                           ),
                         ),
-                        Text('BPM', style: AppTypography.bpmUnit),
+                        Text(l10n.bpmLabel, style: AppTypography.bpmUnit),
                         if (state.currentBpm != null)
                           BpmStatusIndicator(
                             bpm: state.currentBpm,
@@ -160,14 +162,14 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.blue.shade200),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.info_outline, color: Colors.blue),
-                  SizedBox(width: 12),
+                  const Icon(Icons.info_outline, color: Colors.blue),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      "This app is for screening purposes only and not a substitute for professional medical advice. Always consult a doctor.",
-                      style: TextStyle(color: Colors.blue, fontSize: 12),
+                      l10n.medicalDisclaimerContent,
+                      style: const TextStyle(color: Colors.blue, fontSize: 12),
                     ),
                   ),
                 ],
@@ -263,7 +265,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                 child: FilledButton.icon(
                   onPressed: controller.stopMonitoring,
                   icon: const Icon(Icons.stop),
-                  label: const Text('Stop Recording'),
+                  label: Text(l10n.stopRecording),
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.red,
                     padding: const EdgeInsets.all(16),
@@ -284,6 +286,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     MonitoringController controller,
     MonitoringState state,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     if (state.permissionStatus == PermissionStatus.granted) {
       return SizedBox(
         width: double.infinity,
@@ -298,7 +301,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             }
           },
           icon: const Icon(Icons.play_arrow),
-          label: const Text('Start Recording'),
+          label: Text(l10n.startRecording),
           style: FilledButton.styleFrom(padding: const EdgeInsets.all(16)),
         ),
       );
@@ -312,11 +315,11 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             const Icon(Icons.hourglass_empty, color: Colors.orange, size: 48),
             const SizedBox(height: 12),
             Text(
-              "Waiting For Doctor Approval",
+              l10n.waitingForDoctorApproval,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const Text(
-              "A request has been sent to your doctor.",
+            Text(
+              l10n.requestSentToDoctor,
               style: TextStyle(color: Colors.grey),
             ),
           ],
@@ -328,7 +331,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
         child: FilledButton.icon(
           onPressed: controller.requestPermission,
           icon: const Icon(Icons.lock_open),
-          label: const Text('Request Permission to Monitor'),
+          label: Text(l10n.requestPermissionToMonitor),
           style: FilledButton.styleFrom(
             padding: const EdgeInsets.all(16),
             backgroundColor: Colors.orange,
@@ -337,9 +340,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
       );
     } else {
       // Loading with Breathing Loader
-      return const Center(
-        child: BreathingLoader(size: 60, message: 'Memuat...'),
-      );
+      return Center(child: BreathingLoader(size: 60, message: l10n.loading));
     }
   }
 
@@ -348,6 +349,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     MonitoringController controller,
     MonitoringState state,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: SizedBox(
@@ -364,7 +366,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                 builder: (context) {
                   final notesController = TextEditingController();
                   return AlertDialog(
-                    title: const Text('Doctor Analysis'),
+                    title: Text(l10n.doctorAnalysis),
                     content: TextField(
                       controller: notesController,
                       decoration: const InputDecoration(
@@ -377,12 +379,12 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Skip'),
+                        child: Text(l10n.skip),
                       ),
                       FilledButton(
                         onPressed: () =>
                             Navigator.pop(context, notesController.text),
-                        child: const Text('Save Record'),
+                        child: Text(l10n.saveRecord),
                       ),
                     ],
                   );
@@ -394,17 +396,15 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
               await controller.saveRecord(notes: notes);
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Record saved successfully!')),
+                  SnackBar(content: Text(l10n.recordSavedSuccessfully)),
                 );
                 context.pop();
               }
             } catch (e) {
               if (context.mounted) {
-                if (e.toString().contains('Patient profile not found')) {
+                if (e.toString().contains(l10n.patientProfileNotFound)) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please create a patient profile first.'),
-                    ),
+                    SnackBar(content: Text(l10n.patientProfileNotFoundMessage)),
                   );
                 } else {
                   ScaffoldMessenger.of(

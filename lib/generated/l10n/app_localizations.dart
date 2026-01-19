@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Save Record'**
   String get saveRecord;
 
+  /// No description provided for @recordSavedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Record saved successfully!'**
+  String get recordSavedSuccessfully;
+
   /// No description provided for @connect.
   ///
   /// In en, this message translates to:
@@ -517,6 +523,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Patients assigned to you will appear here'**
   String get noPatientsMessage;
+
+  /// No description provided for @patientProfileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient Profile Not Found'**
+  String get patientProfileNotFound;
+
+  /// No description provided for @patientProfileNotFoundMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You must create a patient profile before you can use the application.'**
+  String get patientProfileNotFoundMessage;
 
   /// No description provided for @noNotifications.
   ///

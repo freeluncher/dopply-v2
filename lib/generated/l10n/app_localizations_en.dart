@@ -48,6 +48,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveRecord => 'Save Record';
 
   @override
+  String get recordSavedSuccessfully => 'Record saved successfully!';
+
+  @override
   String get connect => 'Connect';
 
   @override
@@ -230,6 +233,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noPatientsMessage => 'Patients assigned to you will appear here';
+
+  @override
+  String get patientProfileNotFound => 'Patient Profile Not Found';
+
+  @override
+  String get patientProfileNotFoundMessage =>
+      'You must create a patient profile before you can use the application.';
 
   @override
   String get noNotifications => 'No Notifications';

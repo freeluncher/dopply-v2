@@ -48,6 +48,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get saveRecord => 'Simpan Rekaman';
 
   @override
+  String get recordSavedSuccessfully => 'Rekaman berhasil disimpan';
+
+  @override
   String get connect => 'Hubungkan';
 
   @override
@@ -96,7 +99,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get dopplerMonitor => 'Monitor Doppler';
 
   @override
-  String get bpmLabel => 'DPM';
+  String get bpmLabel => 'BPM';
 
   @override
   String statusLabel(String status) {
@@ -231,6 +234,13 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get noPatientsMessage =>
       'Pasien yang ditugaskan kepada Anda akan muncul di sini';
+
+  @override
+  String get patientProfileNotFound => 'Profil Pasien Tidak Ditemukan';
+
+  @override
+  String get patientProfileNotFoundMessage =>
+      'Anda harus membuat profil pasien sebelum dapat menggunakan aplikasi.';
 
   @override
   String get noNotifications => 'Tidak Ada Notifikasi';

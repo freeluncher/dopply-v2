@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../data/auth_repository.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +19,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -47,25 +49,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.email,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.email_outlined),
                     ),
                     validator: (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                        value == null || value.isEmpty ? l10n.required : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock_outline),
+                    decoration: InputDecoration(
+                      labelText: l10n.password,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock_outline),
                     ),
                     obscureText: true,
                     validator: (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                        value == null || value.isEmpty ? l10n.required : null,
                   ),
                   const SizedBox(height: 24),
                   FilledButton(
@@ -82,12 +84,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text('Login'),
+                        : Text(l10n.login),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () => context.push('/register'),
-                    child: const Text('Don\'t have an account? Register'),
+                    child: Text(l10n.dontHaveAccount),
                   ),
                 ],
               ),
