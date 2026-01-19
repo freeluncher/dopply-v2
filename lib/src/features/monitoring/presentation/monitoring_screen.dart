@@ -82,8 +82,7 @@ class MonitoringScreen extends ConsumerWidget {
                       children: [
                         PulseAnimation(
                           bpm: state.currentBpm,
-                          isAnimating:
-                              state.status == MonitoringStatus.monitoring,
+                          isAnimating: (state.currentBpm ?? 0) > 0,
                           child: Text(
                             '${state.currentBpm ?? '--'}',
                             style: AppTypography.bpmDisplay,

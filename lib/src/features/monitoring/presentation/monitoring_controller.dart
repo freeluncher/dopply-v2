@@ -227,9 +227,7 @@ class MonitoringController extends StateNotifier<MonitoringState> {
 
       _bpmSubscription?.cancel();
       _bpmSubscription = _repository.bleRepository.bpmStream.listen((bpm) {
-        if (state.status == MonitoringStatus.monitoring) {
-          _handleNewBpm(bpm);
-        }
+        _handleNewBpm(bpm);
       });
     } catch (e) {
       if (!mounted) return;
@@ -291,10 +289,18 @@ class MonitoringController extends StateNotifier<MonitoringState> {
 
   void _handleNewBpm(int newBpm) {
     if (!mounted) return;
-    final currentBpmData = List<int>.from(state.bpmData);
-    currentBpmData.add(newBpm);
 
-    state = state.copyWith(bpmData: currentBpmData, currentBpm: newBpm);
+    // Always update currentBpm (Live Preview)
+    MonitoringState newState = state.copyWith(currentBpm: newBpm);
+
+    // Only add to graph/history if actively recording
+    if (state.status == MonitoringStatus.monitoring) {
+      final currentBpmData = List<int>.from(state.bpmData);
+      currentBpmData.add(newBpm);
+      newState = newState.copyWith(bpmData: currentBpmData);
+    }
+
+    state = newState;
   }
 
   void stopMonitoring() {

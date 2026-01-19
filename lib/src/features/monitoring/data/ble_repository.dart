@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BleRepository {
   // UUIDs from esp32.ino
@@ -28,12 +29,23 @@ class BleRepository {
       FlutterBluePlus.adapterState;
 
   Future<void> init() async {
-    // Check if BLE is supported/on
+    // 1. Request Runtime Permissions (Crucial for Android 12+)
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.location,
+    ].request();
+
+    if (statuses.values.any((s) => s.isDenied || s.isPermanentlyDenied)) {
+      throw Exception("Bluetooth permissions are required for monitoring.");
+    }
+
+    // 2. Check if BLE is supported/on
     if (await FlutterBluePlus.isSupported == false) {
       throw Exception("Bluetooth not supported");
     }
 
-    // On Android, turn on BT if off
+    // 3. On Android, turn on BT if off
     if (Platform.isAndroid) {
       await FlutterBluePlus.turnOn();
     }
@@ -43,10 +55,6 @@ class BleRepository {
     if (_connectedDevice != null) return;
 
     print("Starting BLE Scan...");
-
-    // Start scanning
-    // We can filter by service UUID if the device advertises it,
-    // but esp32.ino uses generic advertising, let's scan broadly or filter by name "Dopply-FetalMonitor"
 
     final completer = Completer<void>();
 
@@ -81,7 +89,6 @@ class BleRepository {
 
   Future<void> _connectToDevice(BluetoothDevice device) async {
     try {
-      // Explicitly set autoConnect to false (default) to see if it helps analyzer
       await device.connect(autoConnect: false);
       _connectedDevice = device;
 
@@ -106,25 +113,17 @@ class BleRepository {
   Future<void> _setupNotifications(BluetoothCharacteristic c) async {
     await c.setNotifyValue(true);
     c.lastValueStream.listen((value) {
-      // Value is List<int> (bytes)
-      // ESP32 sends a string: "120 (Normal)"
       try {
-        final stringVal = String.fromCharCodes(value);
-        // Avoid print in production, but keeping for debug.
-        // Ideally use a logger.
-        // print("BLE Recv: $stringVal");
+        final stringVal = String.fromCharCodes(value).trim();
+        // ESP32 sends: "120"
+        // Previous assumed: "120 (Normal)" which was incorrect.
 
-        // Extract the number part
-        // "120 (Normal)" -> 120
-        final parts = stringVal.split(' ');
-        if (parts.isNotEmpty) {
-          final bpm = int.tryParse(parts.first);
-          if (bpm != null) {
-            _bpmController.add(bpm);
-          }
+        final bpm = int.tryParse(stringVal);
+        if (bpm != null) {
+          _bpmController.add(bpm);
         }
       } catch (e) {
-        // print("Error parsing BLE data: $e");
+        // Validation error
       }
     });
   }
