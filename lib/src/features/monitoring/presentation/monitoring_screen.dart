@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'monitoring_controller.dart';
@@ -140,6 +141,8 @@ class MonitoringScreen extends ConsumerWidget {
                 ),
                 child: LineChart(
                   LineChartData(
+                    clipData:
+                        const FlClipData.all(), // Fix: Prevent drawing outside
                     gridData: const FlGridData(show: false),
                     titlesData: const FlTitlesData(show: false),
                     borderData: FlBorderData(
@@ -147,16 +150,27 @@ class MonitoringScreen extends ConsumerWidget {
                       border: Border.all(color: Colors.black12),
                     ),
                     minX: 0,
-                    maxX: 60, // Show last 60 points
-                    minY: 60,
+                    maxX: max(
+                      60,
+                      state.bpmData.length.toDouble(),
+                    ), // Dynamic scrolling
+                    minY: 50, // Fix: Lower bound to seeing low bpm
                     maxY: 200,
                     lineBarsData: [
                       LineChartBarData(
-                        spots: state.bpmData.asMap().entries.map((e) {
-                          // If data grows large, we might want to slice connecting line
-                          // For now show all
-                          return FlSpot(e.key.toDouble(), e.value.toDouble());
-                        }).toList(),
+                        spots: state.bpmData
+                            .asMap()
+                            .entries
+                            .where(
+                              (e) => e.value > 30,
+                            ) // Fix: Filter noise (0s)
+                            .map((e) {
+                              return FlSpot(
+                                e.key.toDouble(),
+                                e.value.toDouble(),
+                              );
+                            })
+                            .toList(),
                         isCurved: true,
                         color: const Color(0xFFE91E63),
                         barWidth: 3,

@@ -351,8 +351,12 @@ class MonitoringController extends StateNotifier<MonitoringState> {
       final Map<String, dynamic> dataToInsert = {
         'patient_id': patientIdToSave,
         'created_by': user.id,
-        'start_time': _startTime!.toIso8601String(),
-        'end_time': DateTime.now().toIso8601String(),
+        'start_time': _startTime!
+            .toUtc()
+            .toIso8601String(), // Fix: Store as UTC
+        'end_time': DateTime.now()
+            .toUtc()
+            .toIso8601String(), // Fix: Store as UTC
         'duration_minutes': durationMins,
         'bpm_data': currentData,
         'average_bpm': avgBpm,
