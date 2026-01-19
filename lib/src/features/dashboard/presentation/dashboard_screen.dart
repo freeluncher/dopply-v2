@@ -11,6 +11,7 @@ import 'doctor_requests_screen.dart';
 import '../../../core/error/error_handler.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 // Controller to fetch user profile
 final userProfileProvider = FutureProvider.autoDispose<Map<String, dynamic>>((
@@ -78,6 +79,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Global Error Listener
     ref.listen(errorStreamProvider, (previous, next) {
       next.whenData((failure) {
@@ -104,7 +106,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dopply Dashboard'),
+        title: Text(l10n.dashboardTitle),
         actions: [
           const NotificationBell(),
           IconButton(
@@ -144,11 +146,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Hello, $name',
+                      l10n.helloUser(name),
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     Text(
-                      'Role: ${role.toString().toUpperCase()}',
+                      l10n.roleLabel(role.toString().toUpperCase()),
                       style: Theme.of(
                         context,
                       ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
@@ -163,22 +165,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          "Profile Incomplete",
+                          l10n.profileIncomplete,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const SizedBox(height: 8),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 32.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0),
                           child: Text(
-                            "You must complete your patient profile before you can use the application.",
+                            l10n.completeProfileMessage,
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey),
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ),
                         const SizedBox(height: 24),
                         _DashboardButton(
                           icon: Icons.person_add,
-                          label: 'Complete Profile Now',
+                          label: l10n.completeProfileNow,
                           onPressed: () {
                             context.push('/create-profile');
                           },
@@ -186,7 +188,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ] else ...[
                         _DashboardButton(
                           icon: Icons.bluetooth_connected,
-                          label: 'Start Monitoring',
+                          label: l10n.startMonitoring,
                           onPressed: () {
                             context.push('/monitoring');
                           },
@@ -194,7 +196,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         const SizedBox(height: 16),
                         _DashboardButton(
                           icon: Icons.history,
-                          label: 'My History',
+                          label: l10n.myHistory,
                           onPressed: () {
                             context.push('/records');
                           },
@@ -203,7 +205,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ] else if (role == 'doctor') ...[
                       _DashboardButton(
                         icon: Icons.people,
-                        label: 'My Patients',
+                        label: l10n.myPatients,
                         onPressed: () {
                           context.push('/patients');
                         },
@@ -211,7 +213,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       const SizedBox(height: 16),
                       _DashboardButton(
                         icon: Icons.notifications_active,
-                        label: 'Requests',
+                        label: l10n.requests,
                         badgeCount: pendingCount,
                         onPressed: () {
                           context.push('/requests');
@@ -289,12 +291,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           );
         },
         error: (err, stack) => SoftErrorWidget(
-          title: 'Gagal Memuat',
+          title: l10n.errorLoadProfile,
           message: err.toString(),
           onRetry: () => ref.invalidate(userProfileProvider),
         ),
-        loading: () => const Center(
-          child: BreathingLoader(size: 80, message: 'Memuat profil...'),
+        loading: () => Center(
+          child: BreathingLoader(size: 80, message: l10n.loadingProfile),
         ),
       ),
     );
