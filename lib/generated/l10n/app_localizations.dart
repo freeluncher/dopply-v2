@@ -1004,6 +1004,24 @@ abstract class AppLocalizations {
   /// **'Decline'**
   String get decline;
 
+  /// No description provided for @enterClinicalNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter clinical notes...'**
+  String get enterClinicalNotes;
+
+  /// No description provided for @clinicalNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Normal FHR, localized movement'**
+  String get clinicalNotesHint;
+
+  /// No description provided for @errorWithMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String errorWithMessage(String message);
+
   /// No description provided for @youMustAcceptTerms.
   ///
   /// In en, this message translates to:

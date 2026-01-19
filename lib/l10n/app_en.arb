@@ -182,6 +182,16 @@
   "editUser": "Edit User",
   "iAgreeAndContinue": "I Agree & Continue",
   "decline": "Decline",
+  "enterClinicalNotes": "Enter clinical notes...",
+  "clinicalNotesHint": "e.g., Normal FHR, localized movement",
+  "errorWithMessage": "Error: {message}",
+  "@errorWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
   "youMustAcceptTerms": "You must accept the Terms to use Dopply.",
   "updateAvailable": "Update Available",
   "updateAvailableVersion": "Update Available {version}",

@@ -160,5 +160,8 @@
   "updateNow": "Perbarui Sekarang",
   "permissionNotGranted": "Izin tidak diberikan untuk memasang apk.",
   "languageChanged": "Bahasa diubah ke {language}",
-  "pleaseManageNotifications": "Silakan kelola notifikasi di Pengaturan Perangkat Anda."
+  "pleaseManageNotifications": "Silakan kelola notifikasi di Pengaturan Perangkat Anda.",
+  "enterClinicalNotes": "Masukkan catatan klinis...",
+  "clinicalNotesHint": "mis. FHR normal, gerakan terlokalisasi",
+  "errorWithMessage": "Error: {message}"
 }

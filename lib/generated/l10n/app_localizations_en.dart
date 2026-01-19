@@ -478,6 +478,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get decline => 'Decline';
 
   @override
+  String get enterClinicalNotes => 'Enter clinical notes...';
+
+  @override
+  String get clinicalNotesHint => 'e.g., Normal FHR, localized movement';
+
+  @override
+  String errorWithMessage(String message) {
+    return 'Error: $message';
+  }
+
+  @override
   String get youMustAcceptTerms => 'You must accept the Terms to use Dopply.';
 
   @override

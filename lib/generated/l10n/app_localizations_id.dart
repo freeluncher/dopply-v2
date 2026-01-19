@@ -480,6 +480,17 @@ class AppLocalizationsId extends AppLocalizations {
   String get decline => 'Tolak';
 
   @override
+  String get enterClinicalNotes => 'Masukkan catatan klinis...';
+
+  @override
+  String get clinicalNotesHint => 'mis. FHR normal, gerakan terlokalisasi';
+
+  @override
+  String errorWithMessage(String message) {
+    return 'Error: $message';
+  }
+
+  @override
   String get youMustAcceptTerms =>
       'Anda harus menerima Syarat untuk menggunakan Dopply.';
 

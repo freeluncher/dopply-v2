@@ -369,10 +369,10 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     title: Text(l10n.doctorAnalysis),
                     content: TextField(
                       controller: notesController,
-                      decoration: const InputDecoration(
-                        labelText: 'Enter clinical notes...',
-                        hintText: 'e.g., Normal FHR, localized movement',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.enterClinicalNotes,
+                        hintText: l10n.clinicalNotesHint,
+                        border: const OutlineInputBorder(),
                       ),
                       maxLines: 3,
                     ),
@@ -407,15 +407,17 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     SnackBar(content: Text(l10n.patientProfileNotFoundMessage)),
                   );
                 } else {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('Error: $e')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(l10n.errorWithMessage(e.toString())),
+                    ),
+                  );
                 }
               }
             }
           },
           icon: const Icon(Icons.save),
-          label: const Text('Save Record'),
+          label: Text(l10n.saveRecord),
           style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
         ),
       ),
