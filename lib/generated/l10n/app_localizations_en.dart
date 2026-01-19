@@ -269,4 +269,236 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sort => 'Sort';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get notificationsSettings => 'Notifications';
+
+  @override
+  String get manageNotificationSettings =>
+      'Manage system notification settings';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get appVersion => 'App Version';
+
+  @override
+  String get diagnostics => 'Diagnostics';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get offlineMode => 'Offline Mode';
+
+  @override
+  String get areYouSureLogout => 'Are you sure you want to log out?';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get legalAndAbout => 'Legal & About';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get role => 'Role';
+
+  @override
+  String get specialization => 'Specialization';
+
+  @override
+  String get specializationHint => 'e.g. Obstetrician';
+
+  @override
+  String get hpht => 'HPHT (Last Period)';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get medicalNotes => 'Medical Notes';
+
+  @override
+  String get medicalNotesHint => 'Allergies, history, etc.';
+
+  @override
+  String get birthDate => 'Birth Date';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profile Updated Successfully';
+
+  @override
+  String get failedToLoadProfile => 'Failed to load profile';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get fetalMonitoring => 'Fetal Monitoring';
+
+  @override
+  String get doctorAnalysis => 'Doctor Analysis';
+
+  @override
+  String get recordingInProgress => 'Recording in Progress';
+
+  @override
+  String get monitoringSession => 'Monitoring Session';
+
+  @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account? Register';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? Login';
+
+  @override
+  String get completeProfile => 'Complete Profile';
+
+  @override
+  String get toStartMonitoring => 'To start monitoring, we need a few details.';
+
+  @override
+  String get saveProfile => 'Save Profile';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get recordDetails => 'Record Details';
+
+  @override
+  String get newestFirst => 'Newest First';
+
+  @override
+  String get oldestFirst => 'Oldest First';
+
+  @override
+  String get bpmHighToLow => 'BPM (High to Low)';
+
+  @override
+  String get bpmLowToHigh => 'BPM (Low to High)';
+
+  @override
+  String get newMeasurement => 'New Measurement';
+
+  @override
+  String get averageBpm => 'Average BPM';
+
+  @override
+  String get failedToGeneratePdf => 'Failed to generate PDF';
+
+  @override
+  String get allMarkedAsRead => 'All marked as read';
+
+  @override
+  String get noNotificationsYet => 'No notifications';
+
+  @override
+  String get monitoringRequests => 'Monitoring Requests';
+
+  @override
+  String get requestDoctorTransferTitle => 'Request Doctor Transfer';
+
+  @override
+  String get addPatient => 'Add Patient';
+
+  @override
+  String get addPatientMessage =>
+      'Enter the patient\'s email address to assign them.';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get hphtLabel => 'HPHT';
+
+  @override
+  String get notAvailable => 'N/A';
+
+  @override
+  String get adminConsole => 'Admin Console';
+
+  @override
+  String get addNewUser => 'Add New User';
+
+  @override
+  String get editUser => 'Edit User';
+
+  @override
+  String get iAgreeAndContinue => 'I Agree & Continue';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get youMustAcceptTerms => 'You must accept the Terms to use Dopply.';
+
+  @override
+  String get updateAvailable => 'Update Available';
+
+  @override
+  String updateAvailableVersion(String version) {
+    return 'Update Available $version';
+  }
+
+  @override
+  String get newVersionAvailable => 'A new version of Dopply is available.';
+
+  @override
+  String get downloadingUpdate => 'Downloading Update...';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get updateNow => 'Update Now';
+
+  @override
+  String get permissionNotGranted => 'Permission not granted to install apk.';
+
+  @override
+  String languageChanged(String language) {
+    return 'Language changed to $language';
+  }
+
+  @override
+  String get pleaseManageNotifications =>
+      'Please manage notifications in your Device Settings.';
 }

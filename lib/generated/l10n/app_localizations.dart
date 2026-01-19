@@ -595,6 +595,456 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sort'**
   String get sort;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @notificationsSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsSettings;
+
+  /// No description provided for @manageNotificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage system notification settings'**
+  String get manageNotificationSettings;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get appVersion;
+
+  /// No description provided for @diagnostics.
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostics'**
+  String get diagnostics;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @offlineMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline Mode'**
+  String get offlineMode;
+
+  /// No description provided for @areYouSureLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get areYouSureLogout;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @legalAndAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal & About'**
+  String get legalAndAbout;
+
+  /// No description provided for @myProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get myProfile;
+
+  /// No description provided for @personalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @role.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get role;
+
+  /// No description provided for @specialization.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialization'**
+  String get specialization;
+
+  /// No description provided for @specializationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Obstetrician'**
+  String get specializationHint;
+
+  /// No description provided for @hpht.
+  ///
+  /// In en, this message translates to:
+  /// **'HPHT (Last Period)'**
+  String get hpht;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @medicalNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Notes'**
+  String get medicalNotes;
+
+  /// No description provided for @medicalNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergies, history, etc.'**
+  String get medicalNotesHint;
+
+  /// No description provided for @birthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Date'**
+  String get birthDate;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @profileUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Updated Successfully'**
+  String get profileUpdatedSuccessfully;
+
+  /// No description provided for @failedToLoadProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load profile'**
+  String get failedToLoadProfile;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @fetalMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetal Monitoring'**
+  String get fetalMonitoring;
+
+  /// No description provided for @doctorAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor Analysis'**
+  String get doctorAnalysis;
+
+  /// No description provided for @recordingInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording in Progress'**
+  String get recordingInProgress;
+
+  /// No description provided for @monitoringSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring Session'**
+  String get monitoringSession;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @dontHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? Register'**
+  String get dontHaveAccount;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Login'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @completeProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Profile'**
+  String get completeProfile;
+
+  /// No description provided for @toStartMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'To start monitoring, we need a few details.'**
+  String get toStartMonitoring;
+
+  /// No description provided for @saveProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Profile'**
+  String get saveProfile;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @recordDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Details'**
+  String get recordDetails;
+
+  /// No description provided for @newestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest First'**
+  String get newestFirst;
+
+  /// No description provided for @oldestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest First'**
+  String get oldestFirst;
+
+  /// No description provided for @bpmHighToLow.
+  ///
+  /// In en, this message translates to:
+  /// **'BPM (High to Low)'**
+  String get bpmHighToLow;
+
+  /// No description provided for @bpmLowToHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'BPM (Low to High)'**
+  String get bpmLowToHigh;
+
+  /// No description provided for @newMeasurement.
+  ///
+  /// In en, this message translates to:
+  /// **'New Measurement'**
+  String get newMeasurement;
+
+  /// No description provided for @averageBpm.
+  ///
+  /// In en, this message translates to:
+  /// **'Average BPM'**
+  String get averageBpm;
+
+  /// No description provided for @failedToGeneratePdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate PDF'**
+  String get failedToGeneratePdf;
+
+  /// No description provided for @allMarkedAsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'All marked as read'**
+  String get allMarkedAsRead;
+
+  /// No description provided for @noNotificationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotificationsYet;
+
+  /// No description provided for @monitoringRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring Requests'**
+  String get monitoringRequests;
+
+  /// No description provided for @requestDoctorTransferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Doctor Transfer'**
+  String get requestDoctorTransferTitle;
+
+  /// No description provided for @addPatient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Patient'**
+  String get addPatient;
+
+  /// No description provided for @addPatientMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the patient\'s email address to assign them.'**
+  String get addPatientMessage;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @hphtLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'HPHT'**
+  String get hphtLabel;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get notAvailable;
+
+  /// No description provided for @adminConsole.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Console'**
+  String get adminConsole;
+
+  /// No description provided for @addNewUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New User'**
+  String get addNewUser;
+
+  /// No description provided for @editUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit User'**
+  String get editUser;
+
+  /// No description provided for @iAgreeAndContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'I Agree & Continue'**
+  String get iAgreeAndContinue;
+
+  /// No description provided for @decline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get decline;
+
+  /// No description provided for @youMustAcceptTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the Terms to use Dopply.'**
+  String get youMustAcceptTerms;
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Available'**
+  String get updateAvailable;
+
+  /// No description provided for @updateAvailableVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Available {version}'**
+  String updateAvailableVersion(String version);
+
+  /// No description provided for @newVersionAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of Dopply is available.'**
+  String get newVersionAvailable;
+
+  /// No description provided for @downloadingUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading Update...'**
+  String get downloadingUpdate;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @updateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get updateNow;
+
+  /// No description provided for @permissionNotGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission not granted to install apk.'**
+  String get permissionNotGranted;
+
+  /// No description provided for @languageChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed to {language}'**
+  String languageChanged(String language);
+
+  /// No description provided for @pleaseManageNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Please manage notifications in your Device Settings.'**
+  String get pleaseManageNotifications;
 }
 
 class _AppLocalizationsDelegate

@@ -1,12 +1,10 @@
 {
   "@@locale": "en",
-  
   "appTitle": "Dopply",
   "@appTitle": {
     "description": "Application title"
   },
   "appTagline": "Advanced Fetal Monitoring",
-  
   "dashboardTitle": "Dopply Dashboard",
   "monitoringTitle": "Fetal Monitoring",
   "myHistory": "My History",
@@ -15,7 +13,6 @@
   "notifications": "Notifications",
   "profile": "Profile",
   "requests": "Requests",
-  
   "startRecording": "Start Recording",
   "stopRecording": "Stop Recording",
   "saveRecord": "Save Record",
@@ -28,7 +25,6 @@
   "dismiss": "Dismiss",
   "skip": "Skip",
   "logout": "Log Out",
-  
   "connectionStatus": "Connection Status",
   "connected": "Connected to Monitor",
   "disconnected": "Device Disconnected",
@@ -36,7 +32,6 @@
   "simulationMode": "Using Simulation Mode",
   "realDevice": "Real Device Connected",
   "dopplerMonitor": "Doppler Monitor",
-  
   "bpmLabel": "BPM",
   "statusLabel": "Status: {status}",
   "@statusLabel": {
@@ -46,7 +41,6 @@
       }
     }
   },
-  
   "durationSeconds": "Duration: {seconds}s",
   "@durationSeconds": {
     "placeholders": {
@@ -55,11 +49,9 @@
       }
     }
   },
-  
   "requestPermissionToMonitor": "Request Permission to Monitor",
   "waitingForDoctorApproval": "Waiting For Doctor Approval",
   "requestSentToDoctor": "A request has been sent to your doctor.",
-  
   "medicalDisclaimerTitle": "Medical Disclaimer",
   "medicalDisclaimerSubtitle": "Important Information",
   "medicalDisclaimerContent": "This app is for screening purposes only and not a substitute for professional medical advice. Always consult a doctor.",
@@ -69,7 +61,6 @@
   "disclaimerPoint4": "Seek immediate help if you notice concerning symptoms",
   "iUnderstand": "I Understand",
   "iUnderstandAndAccept": "I Understand and Accept",
-  
   "helloUser": "Hello, {name}",
   "@helloUser": {
     "placeholders": {
@@ -91,7 +82,6 @@
   "completeProfileNow": "Complete Profile Now",
   "assignedDoctor": "Assigned Doctor",
   "requestDoctorTransfer": "Request Doctor Transfer",
-  
   "error": "Error",
   "errorOccurred": "An error occurred",
   "errorLoadProfile": "Failed to Load",
@@ -101,13 +91,11 @@
   "connectionLost": "Connection lost",
   "tryAgain": "Try again",
   "checkConnection": "Please check your internet connection",
-  
   "loading": "Loading...",
   "loadingProfile": "Loading profile...",
   "loadingData": "Loading data...",
   "connectingDevice": "Connecting device...",
   "pleaseWait": "Please wait...",
-  
   "noRecordsYet": "No Records Yet",
   "noRecordsMessage": "Start your first monitoring session to see results here",
   "startMonitoring": "Start Monitoring",
@@ -115,7 +103,6 @@
   "noPatientsMessage": "Patients assigned to you will appear here",
   "noNotifications": "No Notifications",
   "noNotificationsMessage": "You're all caught up!",
-  
   "status": "Status",
   "duration": "Duration",
   "date": "Date",
@@ -126,5 +113,94 @@
   "delete": "Delete",
   "search": "Search",
   "filter": "Filter",
-  "sort": "Sort"
+  "sort": "Sort",
+  "settings": "Settings",
+  "editProfile": "Edit Profile",
+  "notificationsSettings": "Notifications",
+  "manageNotificationSettings": "Manage system notification settings",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "appVersion": "App Version",
+  "diagnostics": "Diagnostics",
+  "online": "Online",
+  "offlineMode": "Offline Mode",
+  "areYouSureLogout": "Are you sure you want to log out?",
+  "account": "Account",
+  "preferences": "Preferences",
+  "legalAndAbout": "Legal & About",
+  "myProfile": "My Profile",
+  "personalInformation": "Personal Information",
+  "fullName": "Full Name",
+  "email": "Email",
+  "role": "Role",
+  "specialization": "Specialization",
+  "specializationHint": "e.g. Obstetrician",
+  "hpht": "HPHT (Last Period)",
+  "address": "Address",
+  "medicalNotes": "Medical Notes",
+  "medicalNotesHint": "Allergies, history, etc.",
+  "birthDate": "Birth Date",
+  "saveChanges": "Save Changes",
+  "profileUpdatedSuccessfully": "Profile Updated Successfully",
+  "failedToLoadProfile": "Failed to load profile",
+  "required": "Required",
+  "fetalMonitoring": "Fetal Monitoring",
+  "doctorAnalysis": "Doctor Analysis",
+  "recordingInProgress": "Recording in Progress",
+  "monitoringSession": "Monitoring Session",
+  "createAccount": "Create Account",
+  "register": "Register",
+  "login": "Login",
+  "dontHaveAccount": "Don't have an account? Register",
+  "alreadyHaveAccount": "Already have an account? Login",
+  "completeProfile": "Complete Profile",
+  "toStartMonitoring": "To start monitoring, we need a few details.",
+  "saveProfile": "Save Profile",
+  "password": "Password",
+  "recordDetails": "Record Details",
+  "newestFirst": "Newest First",
+  "oldestFirst": "Oldest First",
+  "bpmHighToLow": "BPM (High to Low)",
+  "bpmLowToHigh": "BPM (Low to High)",
+  "newMeasurement": "New Measurement",
+  "averageBpm": "Average BPM",
+  "failedToGeneratePdf": "Failed to generate PDF",
+  "allMarkedAsRead": "All marked as read",
+  "noNotificationsYet": "No notifications",
+  "monitoringRequests": "Monitoring Requests",
+  "requestDoctorTransferTitle": "Request Doctor Transfer",
+  "addPatient": "Add Patient",
+  "addPatientMessage": "Enter the patient's email address to assign them.",
+  "add": "Add",
+  "hphtLabel": "HPHT",
+  "notAvailable": "N/A",
+  "adminConsole": "Admin Console",
+  "addNewUser": "Add New User",
+  "editUser": "Edit User",
+  "iAgreeAndContinue": "I Agree & Continue",
+  "decline": "Decline",
+  "youMustAcceptTerms": "You must accept the Terms to use Dopply.",
+  "updateAvailable": "Update Available",
+  "updateAvailableVersion": "Update Available {version}",
+  "@updateAvailableVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "newVersionAvailable": "A new version of Dopply is available.",
+  "downloadingUpdate": "Downloading Update...",
+  "later": "Later",
+  "updateNow": "Update Now",
+  "permissionNotGranted": "Permission not granted to install apk.",
+  "languageChanged": "Language changed to {language}",
+  "@languageChanged": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseManageNotifications": "Please manage notifications in your Device Settings."
 }

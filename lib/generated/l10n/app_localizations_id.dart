@@ -270,4 +270,238 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get sort => 'Urutkan';
+
+  @override
+  String get settings => 'Pengaturan';
+
+  @override
+  String get editProfile => 'Edit Profil';
+
+  @override
+  String get notificationsSettings => 'Notifikasi';
+
+  @override
+  String get manageNotificationSettings =>
+      'Kelola pengaturan notifikasi sistem';
+
+  @override
+  String get termsOfService => 'Syarat Layanan';
+
+  @override
+  String get privacyPolicy => 'Kebijakan Privasi';
+
+  @override
+  String get appVersion => 'Versi Aplikasi';
+
+  @override
+  String get diagnostics => 'Diagnostik';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get offlineMode => 'Mode Offline';
+
+  @override
+  String get areYouSureLogout => 'Apakah Anda yakin ingin keluar?';
+
+  @override
+  String get account => 'Akun';
+
+  @override
+  String get preferences => 'Preferensi';
+
+  @override
+  String get legalAndAbout => 'Legal & Tentang';
+
+  @override
+  String get myProfile => 'Profil Saya';
+
+  @override
+  String get personalInformation => 'Informasi Pribadi';
+
+  @override
+  String get fullName => 'Nama Lengkap';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get role => 'Peran';
+
+  @override
+  String get specialization => 'Spesialisasi';
+
+  @override
+  String get specializationHint => 'mis. Dokter Kandungan';
+
+  @override
+  String get hpht => 'HPHT (Hari Pertama Haid Terakhir)';
+
+  @override
+  String get address => 'Alamat';
+
+  @override
+  String get medicalNotes => 'Catatan Medis';
+
+  @override
+  String get medicalNotesHint => 'Alergi, riwayat, dll.';
+
+  @override
+  String get birthDate => 'Tanggal Lahir';
+
+  @override
+  String get saveChanges => 'Simpan Perubahan';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profil Berhasil Diperbarui';
+
+  @override
+  String get failedToLoadProfile => 'Gagal memuat profil';
+
+  @override
+  String get required => 'Wajib diisi';
+
+  @override
+  String get fetalMonitoring => 'Monitoring Janin';
+
+  @override
+  String get doctorAnalysis => 'Analisis Dokter';
+
+  @override
+  String get recordingInProgress => 'Sedang Merekam';
+
+  @override
+  String get monitoringSession => 'Sesi Monitoring';
+
+  @override
+  String get createAccount => 'Buat Akun';
+
+  @override
+  String get register => 'Daftar';
+
+  @override
+  String get login => 'Masuk';
+
+  @override
+  String get dontHaveAccount => 'Belum punya akun? Daftar';
+
+  @override
+  String get alreadyHaveAccount => 'Sudah punya akun? Masuk';
+
+  @override
+  String get completeProfile => 'Lengkapi Profil';
+
+  @override
+  String get toStartMonitoring =>
+      'Untuk mulai monitoring, kami perlu beberapa detail.';
+
+  @override
+  String get saveProfile => 'Simpan Profil';
+
+  @override
+  String get password => 'Kata Sandi';
+
+  @override
+  String get recordDetails => 'Detail Rekaman';
+
+  @override
+  String get newestFirst => 'Terbaru Dulu';
+
+  @override
+  String get oldestFirst => 'Terlama Dulu';
+
+  @override
+  String get bpmHighToLow => 'BPM (Tinggi ke Rendah)';
+
+  @override
+  String get bpmLowToHigh => 'BPM (Rendah ke Tinggi)';
+
+  @override
+  String get newMeasurement => 'Pengukuran Baru';
+
+  @override
+  String get averageBpm => 'Rata-rata BPM';
+
+  @override
+  String get failedToGeneratePdf => 'Gagal membuat PDF';
+
+  @override
+  String get allMarkedAsRead => 'Semua ditandai sudah dibaca';
+
+  @override
+  String get noNotificationsYet => 'Tidak ada notifikasi';
+
+  @override
+  String get monitoringRequests => 'Permintaan Monitoring';
+
+  @override
+  String get requestDoctorTransferTitle => 'Minta Transfer Dokter';
+
+  @override
+  String get addPatient => 'Tambah Pasien';
+
+  @override
+  String get addPatientMessage =>
+      'Masukkan alamat email pasien untuk menugaskan mereka.';
+
+  @override
+  String get add => 'Tambah';
+
+  @override
+  String get hphtLabel => 'HPHT';
+
+  @override
+  String get notAvailable => 'T/A';
+
+  @override
+  String get adminConsole => 'Konsol Admin';
+
+  @override
+  String get addNewUser => 'Tambah Pengguna Baru';
+
+  @override
+  String get editUser => 'Edit Pengguna';
+
+  @override
+  String get iAgreeAndContinue => 'Saya Setuju & Lanjutkan';
+
+  @override
+  String get decline => 'Tolak';
+
+  @override
+  String get youMustAcceptTerms =>
+      'Anda harus menerima Syarat untuk menggunakan Dopply.';
+
+  @override
+  String get updateAvailable => 'Pembaruan Tersedia';
+
+  @override
+  String updateAvailableVersion(String version) {
+    return 'Pembaruan Tersedia $version';
+  }
+
+  @override
+  String get newVersionAvailable => 'Versi baru Dopply tersedia.';
+
+  @override
+  String get downloadingUpdate => 'Mengunduh Pembaruan...';
+
+  @override
+  String get later => 'Nanti';
+
+  @override
+  String get updateNow => 'Perbarui Sekarang';
+
+  @override
+  String get permissionNotGranted => 'Izin tidak diberikan untuk memasang apk.';
+
+  @override
+  String languageChanged(String language) {
+    return 'Bahasa diubah ke $language';
+  }
+
+  @override
+  String get pleaseManageNotifications =>
+      'Silakan kelola notifikasi di Pengaturan Perangkat Anda.';
 }
