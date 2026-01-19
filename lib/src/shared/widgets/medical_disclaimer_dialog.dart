@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
+import '../../../generated/l10n/app_localizations.dart';
 
 /// Medical Disclaimer Dialog
 ///
@@ -72,6 +73,7 @@ class _MedicalDisclaimerDialogState extends State<MedicalDisclaimerDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Dialog(
       backgroundColor: AppColors.surface,
@@ -103,7 +105,7 @@ class _MedicalDisclaimerDialogState extends State<MedicalDisclaimerDialog> {
             // Title
             Center(
               child: Text(
-                'Informasi Penting',
+                l10n.medicalDisclaimerSubtitle,
                 style: textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
@@ -126,23 +128,17 @@ class _MedicalDisclaimerDialogState extends State<MedicalDisclaimerDialog> {
                 children: [
                   _buildInfoPoint(
                     icon: Icons.info_outline,
-                    text:
-                        'Aplikasi ini adalah alat bantu monitoring, '
-                        'bukan pengganti pemeriksaan medis profesional.',
+                    text: l10n.disclaimerPoint1,
                   ),
                   const SizedBox(height: AppSpacing.small),
                   _buildInfoPoint(
                     icon: Icons.warning_amber_outlined,
-                    text:
-                        'Hasil monitoring harus dikonsultasikan dengan '
-                        'dokter atau bidan untuk interpretasi yang tepat.',
+                    text: l10n.disclaimerPoint3,
                   ),
                   const SizedBox(height: AppSpacing.small),
                   _buildInfoPoint(
                     icon: Icons.local_hospital_outlined,
-                    text:
-                        'Jika Anda mengalami kekhawatiran tentang kesehatan '
-                        'janin, segera hubungi tenaga kesehatan.',
+                    text: l10n.disclaimerPoint4,
                   ),
                 ],
               ),
@@ -203,7 +199,7 @@ class _MedicalDisclaimerDialogState extends State<MedicalDisclaimerDialog> {
                           color: AppColors.onPrimary,
                         ),
                       )
-                    : const Text('Lanjutkan'),
+                    : Text(l10n.confirm),
               ),
             ),
           ],

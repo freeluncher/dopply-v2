@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 /// Empty State Widget
 ///
@@ -117,31 +118,37 @@ class EmptyStates {
   EmptyStates._();
 
   /// No records empty state
-  static Widget noRecords({VoidCallback? onStartMonitoring}) {
+  static Widget noRecords(
+    BuildContext context, {
+    VoidCallback? onStartMonitoring,
+  }) {
+    final l10n = AppLocalizations.of(context)!;
     return EmptyStateWidget(
       icon: Icons.favorite_border,
-      title: 'Belum Ada Rekaman',
-      message: 'Mari mulai pemeriksaan pertama Anda 💝',
-      actionLabel: onStartMonitoring != null ? 'Mulai Monitoring' : null,
+      title: l10n.noRecordsYet,
+      message: l10n.noRecordsMessage,
+      actionLabel: onStartMonitoring != null ? l10n.startMonitoring : null,
       onAction: onStartMonitoring,
     );
   }
 
   /// No patients for doctor
-  static Widget noPatients() {
-    return const EmptyStateWidget(
+  static Widget noPatients(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.people_outline,
-      title: 'Belum Ada Pasien',
-      message: 'Pasien yang terhubung akan muncul di sini',
+      title: l10n.noPatientsYet,
+      message: l10n.noPatientsMessage,
     );
   }
 
   /// No notifications
-  static Widget noNotifications() {
-    return const EmptyStateWidget(
+  static Widget noNotifications(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.notifications_none,
-      title: 'Tidak Ada Notifikasi',
-      message: 'Anda akan menerima notifikasi di sini',
+      title: l10n.noNotifications,
+      message: l10n.noNotificationsMessage,
     );
   }
 

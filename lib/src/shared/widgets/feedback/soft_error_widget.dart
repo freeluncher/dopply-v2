@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 /// Soft Error Widget
 ///
@@ -29,7 +30,7 @@ class SoftErrorWidget extends StatelessWidget {
   /// Error message to display
   final String message;
 
-  /// Optional title (defaults to "Terjadi Kesalahan")
+  /// Optional title (defaults to localized "Error Occurred")
   final String? title;
 
   /// Optional custom icon
@@ -54,6 +55,7 @@ class SoftErrorWidget extends StatelessWidget {
 
   Widget _buildFull(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: AppSpacing.paddingLarge,
@@ -79,7 +81,7 @@ class SoftErrorWidget extends StatelessWidget {
 
             // Title
             Text(
-              title ?? 'Terjadi Kesalahan',
+              title ?? l10n.errorOccurred,
               style: textTheme.titleMedium?.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
@@ -104,7 +106,7 @@ class SoftErrorWidget extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: Text(retryLabel ?? 'Coba Lagi'),
+                label: Text(retryLabel ?? l10n.retry),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.error,
                   side: const BorderSide(color: AppColors.error),
@@ -119,6 +121,7 @@ class SoftErrorWidget extends StatelessWidget {
 
   Widget _buildInline(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: AppSpacing.paddingMedium,
@@ -148,7 +151,7 @@ class SoftErrorWidget extends StatelessWidget {
                   foregroundColor: AppColors.error,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                 ),
-                child: Text(retryLabel ?? 'Coba Lagi'),
+                child: Text(retryLabel ?? l10n.retry),
               ),
             ),
           ],
@@ -163,43 +166,23 @@ class SoftErrors {
   SoftErrors._();
 
   /// Network error
-  static Widget network({VoidCallback? onRetry}) {
+  static Widget network(BuildContext context, {VoidCallback? onRetry}) {
+    final l10n = AppLocalizations.of(context)!;
     return SoftErrorWidget(
       icon: Icons.wifi_off_outlined,
-      title: 'Tidak Ada Koneksi',
-      message: 'Periksa koneksi internet Anda dan coba lagi',
+      title: l10n.errorNetwork,
+      message: l10n.checkConnection,
       onRetry: onRetry,
     );
   }
 
   /// Bluetooth error
-  static Widget bluetooth({VoidCallback? onRetry}) {
+  static Widget bluetooth(BuildContext context, {VoidCallback? onRetry}) {
+    final l10n = AppLocalizations.of(context)!;
     return SoftErrorWidget(
       icon: Icons.bluetooth_disabled,
-      title: 'Bluetooth Tidak Aktif',
-      message: 'Aktifkan Bluetooth untuk menghubungkan perangkat',
-      onRetry: onRetry,
-      retryLabel: 'Buka Pengaturan',
-    );
-  }
-
-  /// Device not found
-  static Widget deviceNotFound({VoidCallback? onRetry}) {
-    return SoftErrorWidget(
-      icon: Icons.bluetooth_searching,
-      title: 'Perangkat Tidak Ditemukan',
-      message: 'Pastikan perangkat Doppler Anda menyala dan dalam jangkauan',
-      onRetry: onRetry,
-      retryLabel: 'Cari Ulang',
-    );
-  }
-
-  /// Server error
-  static Widget server({VoidCallback? onRetry}) {
-    return SoftErrorWidget(
-      icon: Icons.cloud_off_outlined,
-      title: 'Gangguan Server',
-      message: 'Terjadi masalah pada server. Silakan coba beberapa saat lagi',
+      title: l10n.errorBluetooth,
+      message: l10n.checkConnection,
       onRetry: onRetry,
     );
   }
