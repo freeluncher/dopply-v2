@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'admin_views/notifications_tab.dart';
 import 'admin_views/overview_tab.dart';
 import 'admin_views/users_tab.dart';
 import 'admin_views/transfers_tab.dart';
@@ -11,20 +12,27 @@ class AdminDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Admin Console'),
           bottom: const TabBar(
+            isScrollable: true,
             tabs: [
               Tab(icon: Icon(Icons.dashboard), text: 'Overview'),
               Tab(icon: Icon(Icons.people), text: 'Users'),
               Tab(icon: Icon(Icons.swap_horiz_outlined), text: 'Transfers'),
+              Tab(icon: Icon(Icons.notifications), text: 'Notifications'),
             ],
           ),
         ),
         body: const TabBarView(
-          children: [OverviewTab(), UsersTab(), TransfersTab()],
+          children: [
+            OverviewTab(),
+            UsersTab(),
+            TransfersTab(),
+            NotificationsTab(),
+          ],
         ),
       ),
     );
