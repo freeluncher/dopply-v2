@@ -47,8 +47,22 @@ class MonitoringController extends StateNotifier<MonitoringState> {
           }
         });
 
+    // Listen to Auth Changes (Fix for Realtime Token Expiry)
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      data,
+    ) {
+      final event = data.event;
+      if (event == AuthChangeEvent.signedIn ||
+          event == AuthChangeEvent.tokenRefreshed ||
+          event == AuthChangeEvent.initialSession) {
+        _initPermission();
+      }
+    });
+
     _initPermission();
   }
+
+  StreamSubscription? _authSubscription;
 
   // PERMISSION LOGIC
   StreamSubscription? _requestsSubscription;
@@ -390,6 +404,7 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     _connectionStateSubscription?.cancel();
     _requestsSubscription?.cancel();
     _adapterStateSubscription?.cancel();
+    _authSubscription?.cancel();
     _repository.bleRepository.disconnect();
     super.dispose();
   }
