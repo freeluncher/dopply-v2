@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 
 
+## [1.2.1] - 2026-01-19
+
+### Critical Fixes
+- **Realtime Stability**: Fixed `InvalidJWTToken` crash by implementing auto-reconnect logic when Auth Token refreshes.
+- **Android 12+ Support**: Fixed "Device Not Found" error by explicitly requesting Runtime Permissions (`BLUETOOTH_SCAN`, `BLUETOOTH_CONNECT`, `LOCATION`).
+- **Data Sync**: Fixed BLE data parsing issues where the app expected a different format than the ESP32. Now synced to parse raw integer data.
+
+### Enhancements
+- **Live BPM Preview**:
+  - Users can now see their Heart Rate immediately upon connection (Preview Mode) without needing to start a recording session.
+  - Recording only saves data to history/graph when the "Start Recording" button is explicitly pressed.
+- **Admin Security**: Added missing RLS Policy (`Admins view all notifications`) ensuring Admins can verify sent broadcasts in the Notification Tab.
+
 ## [1.2.0] - 2026-01-19
 
 ### Added
