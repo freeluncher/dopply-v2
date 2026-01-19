@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../generated/l10n/app_localizations.dart';
 import 'core/router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/providers/locale_provider.dart';
 
 class DopplyApp extends ConsumerWidget {
   const DopplyApp({super.key});
@@ -11,6 +12,7 @@ class DopplyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final locale = ref.watch(localeProvider);
 
     return MaterialApp.router(
       title: 'Dopply',
@@ -29,7 +31,7 @@ class DopplyApp extends ConsumerWidget {
         Locale('en'), // English
         Locale('id'), // Indonesian
       ],
-      locale: const Locale('id'), // Default to Indonesian
+      locale: locale, // Dynamic locale from provider
     );
   }
 }
