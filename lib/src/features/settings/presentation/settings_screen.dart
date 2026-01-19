@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/services/offline_service.dart';
 import '../widgets/language_selector.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -41,16 +42,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final offlineService = ref.watch(offlineServiceProvider);
     final isOnline = offlineService.isOnline;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         children: [
           // ACCOUNT SECTION
-          _buildSectionHeader(context, 'Account'),
+          _buildSectionHeader(context, l10n.account),
           ListTile(
             leading: const Icon(Icons.person_outline),
-            title: const Text('Edit Profile'),
+            title: Text(l10n.editProfile),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push('/profile'),
           ),
@@ -58,21 +60,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const Divider(),
 
           // PREFERENCES SECTION
-          _buildSectionHeader(context, 'Preferences'),
+          _buildSectionHeader(context, l10n.preferences),
           ListTile(
             leading: const Icon(Icons.notifications_outlined),
-            title: const Text('Notifications'),
-            subtitle: const Text('Manage system notification settings'),
+            title: Text(l10n.notificationsSettings),
+            subtitle: Text(l10n.manageNotificationSettings),
             trailing: const Icon(Icons.open_in_new, size: 16),
             onTap: () {
-              // Open System Settings (Generic approach or just show snackbar)
-              // For now, simpler to just explain or do nothing if no permission_handler specific method used
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Please manage notifications in your Device Settings.',
-                  ),
-                ),
+                SnackBar(content: Text(l10n.pleaseManageNotifications)),
               );
             },
           ),
@@ -85,23 +81,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const Divider(),
 
           // LEGAL SECTION
-          _buildSectionHeader(context, 'Legal & About'),
+          _buildSectionHeader(context, l10n.legalAndAbout),
           ListTile(
             leading: const Icon(Icons.description_outlined),
-            title: const Text('Terms of Service'),
+            title: Text(l10n.termsOfService),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push('/tos'), // Reuse our internal ToS screen
+            onTap: () => context.push('/tos'),
           ),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
-            title: const Text('Privacy Policy'),
+            title: Text(l10n.privacyPolicy),
             trailing: const Icon(Icons.open_in_new, size: 16),
-            onTap: () =>
-                _launchUrl('https://example.com/privacy'), // Placeholder
+            onTap: () => _launchUrl('https://example.com/privacy'),
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('App Version'),
+            title: Text(l10n.appVersion),
             trailing: Text(
               _version,
               style: const TextStyle(color: Colors.grey),
@@ -111,15 +106,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const Divider(),
 
           // DIAGNOSTICS
-          _buildSectionHeader(context, 'Diagnostics'),
+          _buildSectionHeader(context, l10n.diagnostics),
           ListTile(
             leading: Icon(
               isOnline ? Icons.wifi : Icons.wifi_off,
               color: isOnline ? Colors.green : Colors.grey,
             ),
-            title: const Text('Connection Status'),
+            title: Text(l10n.connectionStatus),
             trailing: Text(
-              isOnline ? 'Online' : 'Offline Mode',
+              isOnline ? l10n.online : l10n.offlineMode,
               style: TextStyle(
                 color: isOnline ? Colors.green : Colors.grey,
                 fontWeight: FontWeight.bold,
@@ -141,18 +136,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 final confirm = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Logout'),
-                    content: const Text('Are you sure you want to log out?'),
+                    title: Text(l10n.logout),
+                    content: Text(l10n.areYouSureLogout),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancel'),
+                        child: Text(l10n.cancel),
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(context, true),
-                        child: const Text(
-                          'Logout',
-                          style: TextStyle(color: Colors.red),
+                        child: Text(
+                          l10n.logout,
+                          style: const TextStyle(color: Colors.red),
                         ),
                       ),
                     ],
@@ -161,11 +156,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                 if (confirm == true) {
                   await Supabase.instance.client.auth.signOut();
-                  // Router AuthGuard will handle redirect
                 }
               },
               icon: const Icon(Icons.logout),
-              label: const Text('Logout'),
+              label: Text(l10n.logout),
             ),
           ),
           const SizedBox(height: 32),

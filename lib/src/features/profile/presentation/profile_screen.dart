@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'profile_controller.dart';
+import '../../../../generated/l10n/app_localizations.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -62,12 +63,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileControllerProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     // Listen for success
     ref.listen(profileControllerProvider, (prev, next) {
       if (next.isSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile Updated Successfully')),
+          SnackBar(content: Text(l10n.profileUpdatedSuccessfully)),
         );
         // Invalidate dashboard provider so it refreshes too
         // ref.invalidate(userProfileProvider); // If imported
@@ -98,7 +100,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: Text(l10n.myProfile),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -157,37 +159,40 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               const SizedBox(height: 24),
 
               // Read Only
-              _buildReadOnlyField("Email", data['email']),
+              _buildReadOnlyField(l10n.email, data['email']),
               const SizedBox(height: 16),
-              _buildReadOnlyField("Role", role.toString().toUpperCase()),
+              _buildReadOnlyField(l10n.role, role.toString().toUpperCase()),
               const SizedBox(height: 16),
 
               const Divider(),
               const SizedBox(height: 16),
 
-              const Text(
-                "Personal Information",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                l10n.personalInformation,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
 
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: "Full Name",
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.fullName,
+                  border: const OutlineInputBorder(),
                 ),
-                validator: (v) => v!.isEmpty ? 'Required' : null,
+                validator: (v) => v!.isEmpty ? l10n.required : null,
               ),
 
               if (role == 'doctor') ...[
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _specController,
-                  decoration: const InputDecoration(
-                    labelText: "Specialization",
-                    border: OutlineInputBorder(),
-                    hintText: "e.g. Obstetrician",
+                  decoration: InputDecoration(
+                    labelText: l10n.specialization,
+                    border: const OutlineInputBorder(),
+                    hintText: l10n.specializationHint,
                   ),
                 ),
               ],
@@ -197,10 +202,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 TextFormField(
                   controller: _hphtController,
                   readOnly: true,
-                  decoration: const InputDecoration(
-                    labelText: "HPHT (Last Period)",
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.calendar_today),
+                  decoration: InputDecoration(
+                    labelText: l10n.hpht,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: const Icon(Icons.calendar_today),
                   ),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -222,19 +227,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _addressController,
-                  decoration: const InputDecoration(
-                    labelText: "Address",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.address,
+                    border: const OutlineInputBorder(),
                   ),
                   maxLines: 2,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _notesController,
-                  decoration: const InputDecoration(
-                    labelText: "Medical Notes",
-                    border: OutlineInputBorder(),
-                    hintText: "Allergies, history, etc.",
+                  decoration: InputDecoration(
+                    labelText: l10n.medicalNotes,
+                    border: const OutlineInputBorder(),
+                    hintText: l10n.medicalNotesHint,
                   ),
                   maxLines: 3,
                 ),
@@ -248,7 +253,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   onPressed: state.isLoading ? null : _save,
                   child: state.isLoading
                       ? const CircularProgressIndicator()
-                      : const Text("Save Changes"),
+                      : Text(l10n.saveChanges),
                 ),
               ),
 
