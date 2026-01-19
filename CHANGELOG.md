@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [1.2.2] - 2026-01-19
+
+### Critical Fixes
+- **BLE Stability**: Fixed "Device Not Found" error by explicitly requesting Runtime Permissions (`BLUETOOTH_SCAN`, `BLUETOOTH_CONNECT`, `LOCATION`).
+
+
 ## [1.2.1] - 2026-01-19
 
 ### Critical Fixes

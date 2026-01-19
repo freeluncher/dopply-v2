@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:dopply_v2/src/core/services/remote_logger.dart';
+
 class BleRepository {
   // UUIDs from esp32.ino
   static const String serviceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
@@ -10,6 +12,8 @@ class BleRepository {
 
   BluetoothDevice? _connectedDevice;
   StreamSubscription? _scanSubscription;
+
+  bool get isConnected => _connectedDevice != null;
 
   // Stream of BPM values (integers)
   final _bpmController = StreamController<int>.broadcast();
@@ -60,9 +64,15 @@ class BleRepository {
 
     _scanSubscription = FlutterBluePlus.onScanResults.listen((results) async {
       for (ScanResult r in results) {
-        if (r.device.platformName == "Dopply-FetalMonitor" ||
-            r.advertisementData.serviceUuids.contains(Guid(serviceUuid))) {
-          print("Found Dopply Monitor: ${r.device.platformName}");
+        bool namesMatch = r.device.platformName == "Dopply-FetalMonitor";
+        bool uuidsMatch = r.advertisementData.serviceUuids.any(
+          (guid) => guid.toString().toLowerCase() == serviceUuid.toLowerCase(),
+        );
+
+        if (namesMatch || uuidsMatch) {
+          RemoteLogger.info(
+            "Found Dopply Monitor: ${r.device.platformName} (${r.device.remoteId})",
+          );
 
           // Stop scanning
           FlutterBluePlus.stopScan();
@@ -81,6 +91,7 @@ class BleRepository {
     await Future.delayed(const Duration(seconds: 10));
     if (!completer.isCompleted) {
       _scanSubscription?.cancel();
+      RemoteLogger.error("Device scan timeout - Device not found");
       throw Exception("Device not found. Make sure it's on and in range.");
     }
 
@@ -89,15 +100,18 @@ class BleRepository {
 
   Future<void> _connectToDevice(BluetoothDevice device) async {
     try {
+      RemoteLogger.info("Connecting to ${device.remoteId}...");
       await device.connect(autoConnect: false);
       _connectedDevice = device;
+      RemoteLogger.info("Connected to ${device.remoteId}");
 
       // Discover services
       final services = await device.discoverServices();
       for (BluetoothService s in services) {
-        if (s.uuid.toString() == serviceUuid) {
+        if (s.uuid.toString().toLowerCase() == serviceUuid.toLowerCase()) {
           for (BluetoothCharacteristic c in s.characteristics) {
-            if (c.uuid.toString() == charUuid) {
+            if (c.uuid.toString().toLowerCase() == charUuid.toLowerCase()) {
+              RemoteLogger.info("Found Characteristic. Subscribing...");
               await _setupNotifications(c);
               return;
             }
@@ -105,6 +119,7 @@ class BleRepository {
         }
       }
     } catch (e) {
+      RemoteLogger.error("Connection Failed: $e");
       _connectedDevice = null;
       rethrow;
     }
@@ -112,18 +127,26 @@ class BleRepository {
 
   Future<void> _setupNotifications(BluetoothCharacteristic c) async {
     await c.setNotifyValue(true);
-    c.lastValueStream.listen((value) {
+    // Use onValueReceived for newer flutter_blue_plus reliability
+    c.onValueReceived.listen((value) {
       try {
         final stringVal = String.fromCharCodes(value).trim();
-        // ESP32 sends: "120"
-        // Previous assumed: "120 (Normal)" which was incorrect.
+        print("BLE RAW: $stringVal | Bytes: $value"); // Debug Log
 
-        final bpm = int.tryParse(stringVal);
-        if (bpm != null) {
-          _bpmController.add(bpm);
+        // Extract Digits Only (Robustness against \0, spaces, etc)
+        // This handles "120", "120\u0000", " 120 ", "BPM:120"
+        final regExp = RegExp(r'\d+');
+        final match = regExp.firstMatch(stringVal);
+
+        if (match != null) {
+          final bpmStr = match.group(0);
+          final bpm = int.tryParse(bpmStr!);
+          if (bpm != null) {
+            _bpmController.add(bpm);
+          }
         }
       } catch (e) {
-        // Validation error
+        print("BLE Parse Error: $e");
       }
     });
   }

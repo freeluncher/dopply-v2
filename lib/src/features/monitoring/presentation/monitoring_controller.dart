@@ -29,6 +29,8 @@ class MonitoringController extends StateNotifier<MonitoringState> {
   StreamSubscription? _bpmSubscription;
   StreamSubscription? _connectionStateSubscription;
   StreamSubscription? _adapterStateSubscription;
+  StreamSubscription? _authSubscription;
+  StreamSubscription? _requestsSubscription;
 
   MonitoringController(this._repository, this._offlineService, this._patientId)
     : super(const MonitoringState()) {
@@ -47,7 +49,7 @@ class MonitoringController extends StateNotifier<MonitoringState> {
           }
         });
 
-    // Listen to Auth Changes (Fix for Realtime Token Expiry)
+    // Listen to Auth Changes
     _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
       data,
     ) {
@@ -60,16 +62,44 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     });
 
     _initPermission();
+
+    // Restore Connection if already active (Persistence)
+    if (_repository.bleRepository.isConnected) {
+      state = state.copyWith(
+        connectionStatus: DeviceConnectionStatus.connected,
+        isSimulation: false,
+      );
+      _setupBleListeners();
+    }
   }
 
-  StreamSubscription? _authSubscription;
+  void _setupBleListeners() {
+    _connectionStateSubscription?.cancel();
+    _connectionStateSubscription = _repository
+        .bleRepository
+        .connectionStateStream
+        .listen((event) {
+          if (!mounted) return;
+          if (event == BluetoothConnectionState.connected) {
+            state = state.copyWith(
+              connectionStatus: DeviceConnectionStatus.connected,
+            );
+          } else if (event == BluetoothConnectionState.disconnected) {
+            state = state.copyWith(
+              connectionStatus: DeviceConnectionStatus.disconnected,
+              errorMessage: "Device disconnected",
+            );
+          }
+        });
 
-  // PERMISSION LOGIC
-  StreamSubscription? _requestsSubscription;
+    _bpmSubscription?.cancel();
+    _bpmSubscription = _repository.bleRepository.bpmStream.listen((bpm) {
+      _handleNewBpm(bpm);
+    });
+  }
 
   Future<void> _initPermission() async {
     if (_patientId != null) {
-      // Doctor mode: Always Granted
       state = state.copyWith(permissionStatus: PermissionStatus.granted);
       return;
     }
@@ -79,7 +109,6 @@ class MonitoringController extends StateNotifier<MonitoringState> {
       final user = Supabase.instance.client.auth.currentUser;
       if (user == null) return;
 
-      // Get Patient ID
       final patient = await Supabase.instance.client
           .from('patients')
           .select('id')
@@ -93,7 +122,6 @@ class MonitoringController extends StateNotifier<MonitoringState> {
 
       final patientId = patient['id'];
 
-      // Setup Realtime Subscription
       _requestsSubscription?.cancel();
       _requestsSubscription = Supabase.instance.client
           .from('monitoring_requests')
@@ -122,7 +150,6 @@ class MonitoringController extends StateNotifier<MonitoringState> {
                   permissionStatus: PermissionStatus.pending,
                 );
               } else {
-                // rejected or completed
                 state = state.copyWith(permissionStatus: PermissionStatus.none);
               }
             },
@@ -151,7 +178,6 @@ class MonitoringController extends StateNotifier<MonitoringState> {
 
       final patientId = patient['id'];
 
-      // Find assigned doctor
       final assignment = await Supabase.instance.client
           .from('doctor_patient')
           .select('doctor_id')
@@ -166,14 +192,12 @@ class MonitoringController extends StateNotifier<MonitoringState> {
         return;
       }
 
-      // Create Request
       await Supabase.instance.client.from('monitoring_requests').insert({
         'patient_id': patientId,
         'doctor_id': assignment['doctor_id'],
         'status': 'pending',
       });
 
-      // Notify Doctor
       await Supabase.instance.client.from('notifications').insert({
         'recipient_id': assignment['doctor_id'],
         'sender_id': user.id,
@@ -207,28 +231,7 @@ class MonitoringController extends StateNotifier<MonitoringState> {
         isSimulation: false,
       );
 
-      _connectionStateSubscription?.cancel();
-      _connectionStateSubscription = _repository
-          .bleRepository
-          .connectionStateStream
-          .listen((event) {
-            if (!mounted) return;
-            if (event == BluetoothConnectionState.connected) {
-              state = state.copyWith(
-                connectionStatus: DeviceConnectionStatus.connected,
-              );
-            } else if (event == BluetoothConnectionState.disconnected) {
-              state = state.copyWith(
-                connectionStatus: DeviceConnectionStatus.disconnected,
-                errorMessage: "Device disconnected",
-              );
-            }
-          });
-
-      _bpmSubscription?.cancel();
-      _bpmSubscription = _repository.bleRepository.bpmStream.listen((bpm) {
-        _handleNewBpm(bpm);
-      });
+      _setupBleListeners();
     } catch (e) {
       if (!mounted) return;
       state = state.copyWith(
@@ -239,10 +242,17 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     }
   }
 
+  // Explicitly disconnect if user wants to
+  Future<void> disconnectDevice() async {
+    await _repository.bleRepository.disconnect();
+    state = state.copyWith(
+      connectionStatus: DeviceConnectionStatus.disconnected,
+    );
+  }
+
   void startMonitoring() {
     if (!mounted) return;
 
-    // Check permission again just in case
     if (state.permissionStatus != PermissionStatus.granted) {
       state = state.copyWith(errorMessage: "Permission required to monitor.");
       return;
@@ -290,10 +300,8 @@ class MonitoringController extends StateNotifier<MonitoringState> {
   void _handleNewBpm(int newBpm) {
     if (!mounted) return;
 
-    // Always update currentBpm (Live Preview)
     MonitoringState newState = state.copyWith(currentBpm: newBpm);
 
-    // Only add to graph/history if actively recording
     if (state.status == MonitoringStatus.monitoring) {
       final currentBpmData = List<int>.from(state.bpmData);
       currentBpmData.add(newBpm);
@@ -353,26 +361,21 @@ class MonitoringController extends StateNotifier<MonitoringState> {
       };
 
       if (_patientId != null) {
-        // Doctor Mode
         dataToInsert['doctor_notes'] = notes;
       } else {
-        // Patient Mode
         dataToInsert['notes'] = notes;
       }
 
-      // OFFLINE CHECK
       if (!_offlineService.isOnline) {
         await _offlineService.addToQueue(
           'records',
           dataToInsert,
           type: 'insert',
         );
-        // Can add logic here to show a toast "Saved Offline" if UI supported it
       } else {
         await Supabase.instance.client.from('records').insert(dataToInsert);
       }
 
-      // If Patient Mode: Mark permission used
       if (_patientId == null) {
         if (_offlineService.isOnline) {
           final request = await Supabase.instance.client
@@ -411,7 +414,10 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     _requestsSubscription?.cancel();
     _adapterStateSubscription?.cancel();
     _authSubscription?.cancel();
-    _repository.bleRepository.disconnect();
+
+    // NOTE: We do NOT disconnect here anymore, to allow background connection.
+    // _repository.bleRepository.disconnect();
+
     super.dispose();
   }
 }
