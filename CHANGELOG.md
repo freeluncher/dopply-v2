@@ -2,7 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.1.1] - 2026-01-19
+
+## [1.2.0] - 2026-01-19
+
+### Added
+- **Admin Console V2**:
+  - **Notification Center**: Fully functional panel to send notifications and **Broadcast** messages to all users.
+  - **User Management**: Integrated CRUD (Edit Name/Role, Soft Delete, and **Hard Delete/Block Login** via Edge Functions).
+  - **Secure Deletion**: Implemented `delete-user` Edge Function to safely remove users from Authentication and Database.
+- **Push Notifications System**:
+  - Full end-to-end integration with Firebase Cloud Messaging (FCM) and Supabase Edge Functions.
+  - **Broadcast Support**: Send system-wide announcements with one click.
+  - **Android 8.0+ Fix**: Added Notification Channel Metadata to ensure delivery in background/terminated states.
+- **Database Optimization**:
+  - Improved Schema Relationships for Notifications (Fixed FK errors).
+  - Optimized RLS policies for Admin access.
+
+### Fixed
+- **Notification UI**: Resolved `RenderFlex overflow` in Admin dropdown for long user emails.
+- **Data Integrity**: Corrected database relationships for `notifications` table (now properly linked to `profiles`).
+- **Assets**: Updated Splash Screen with transparent logo variant (`logo-dopply-transparent.png`).
+
+### Changed
+- **Performance**: Reduced build size by optimizing unused assets and imports.
+
 
 ### Added
 - **UI/UX Improvements**:
