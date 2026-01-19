@@ -11,7 +11,7 @@ final adminStatsProvider = FutureProvider.autoDispose<Map<String, int>>((
   final results = await Future.wait([
     client.from('profiles').count(),
     client.from('patients').count(),
-    client.from('fetal_heart_rates').count(),
+    client.from('records').count(),
     client
         .from('transfer_requests')
         .count(CountOption.exact)
