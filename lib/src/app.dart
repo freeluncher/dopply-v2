@@ -6,6 +6,11 @@ import 'core/router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/locale_provider.dart';
 
+/// The main application widget for Dopply.
+///
+/// This widget sets up the MaterialApp with routing, theming,
+/// and localization support. It uses Riverpod for state management
+/// and GoRouter for navigation.
 class DopplyApp extends ConsumerWidget {
   const DopplyApp({super.key});
 

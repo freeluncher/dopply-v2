@@ -9,6 +9,14 @@ import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../../../generated/l10n/app_localizations.dart';
 
+/// Monitoring screen for fetal heart rate monitoring.
+///
+/// This screen displays the fetal heart rate monitoring data and allows users to monitor the fetal heart rate.
+///
+/// Usage:
+/// ```dart
+/// MonitoringScreen(patientId: 1);
+/// ```
 class MonitoringScreen extends ConsumerStatefulWidget {
   final int? patientId;
 

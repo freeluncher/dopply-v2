@@ -2,9 +2,18 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:dopply_v2/src/core/services/remote_logger.dart';
 
+/// Repository for managing Bluetooth Low Energy (BLE) operations.
+///
+/// This class handles BLE scanning, connection, and data reception from the Dopply Fetal Monitor.
+///
+/// Usage:
+/// ```dart
+/// final bleRepository = BleRepository();
+/// await bleRepository.init();
+/// await bleRepository.scanAndConnect();
+/// ```
 class BleRepository {
   // UUIDs from esp32.ino
   static const String serviceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
@@ -54,6 +63,15 @@ class BleRepository {
       await FlutterBluePlus.turnOn();
     }
   }
+
+  /// Scans for the Dopply Fetal Monitor and connects to it.
+  ///
+  /// This method scans for the Dopply Fetal Monitor and connects to it.
+  ///
+  /// Usage:
+  /// ```dart
+  /// await bleRepository.scanAndConnect();
+  /// ```
 
   Future<void> scanAndConnect() async {
     if (_connectedDevice != null) return;
@@ -151,6 +169,14 @@ class BleRepository {
     });
   }
 
+  /// Disconnects from the Dopply Fetal Monitor.
+  ///
+  /// This method disconnects from the Dopply Fetal Monitor.
+  ///
+  /// Usage:
+  /// ```dart
+  /// await bleRepository.disconnect();
+  /// ```
   Future<void> disconnect() async {
     await _connectedDevice?.disconnect();
     _connectedDevice = null;

@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:ota_update/ota_update.dart';
 import '../../../core/services/update_service.dart';
 
+/// Dialog for displaying update information and initiating the update process.
+///
+/// This dialog shows the available update version, release notes, and provides options to update now or later.
+/// It uses the [UpdateService] to download and install the update.
+///
+/// Usage:
+/// ```dart
+/// showDialog(
+///   context: context,
+///   builder: (context) => UpdateDialog(releaseInfo: releaseInfo),
+/// );
+/// ```
+
 class UpdateDialog extends StatefulWidget {
   final ReleaseInfo releaseInfo;
 
@@ -23,6 +36,8 @@ class _UpdateDialogState extends State<UpdateDialog> {
       _progress = "0";
     });
 
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     _updateService
         .runUpdate(widget.releaseInfo.downloadUrl)
         .listen(
@@ -32,11 +47,9 @@ class _UpdateDialogState extends State<UpdateDialog> {
               _progress = event.value;
             });
 
-            // Handle specific statuses if needed
             if (_status == OtaStatus.PERMISSION_NOT_GRANTED_ERROR) {
               _resetState();
-              ScaffoldMessenger.of(context).showSnackBar(
-                // Context might be unstable if dialog, use key/global if needed
+              scaffoldMessenger.showSnackBar(
                 const SnackBar(
                   content: Text('Permission not granted to install apk.'),
                 ),

@@ -5,6 +5,20 @@ import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../../../generated/l10n/app_localizations.dart';
 
+/// Screen displayed while the application is loading.
+///
+/// This screen shows the app logo, name, tagline, and version number.
+/// It also displays a breathing loader animation while the app initializes.
+/// The screen automatically navigates to the home screen after a minimum display time.
+///
+/// Usage:
+/// ```dart
+/// Navigator.push(
+///   context,
+///   MaterialPageRoute(builder: (context) => const SplashScreen()),
+/// );
+/// ```
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

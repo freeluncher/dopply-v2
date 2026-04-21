@@ -46,8 +46,9 @@ final recordsProvider = StreamProvider.family
             .eq('user_id', user.id)
             .asStream()
             .asyncExpand((patientDataList) {
-              if (patientDataList.isEmpty)
+              if (patientDataList.isEmpty) {
                 return Stream.value(<Map<String, dynamic>>[]);
+              }
               final myPatientId = patientDataList.first['id'];
 
               if (!offlineService.isOnline) {

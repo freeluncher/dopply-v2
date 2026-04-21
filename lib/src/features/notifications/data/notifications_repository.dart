@@ -1,6 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Provides a [NotificationsRepository] instance.
+///
+/// This provider is used to create a [NotificationsRepository] instance.
+///
+/// Usage:
+/// ```dart
+/// final notificationsRepository = ref.watch(notificationsRepositoryProvider);
+/// ```
 final notificationsRepositoryProvider = Provider<NotificationsRepository>((
   ref,
 ) {

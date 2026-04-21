@@ -1,6 +1,18 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 
+/// Service for logging events and errors to a remote database.
+///
+/// This service provides a centralized way to log application events,
+/// errors, and debugging information to a Supabase database table named
+/// `monitor_logs`. It allows developers to track application behavior
+/// and debug issues in production.
+///
+/// Usage:
+/// ```dart
+/// RemoteLogger.info('User logged in');
+/// RemoteLogger.error('Failed to fetch data', error);
+/// ```
 class RemoteLogger {
   static final RemoteLogger _instance = RemoteLogger._internal();
   factory RemoteLogger() => _instance;
@@ -35,8 +47,13 @@ class RemoteLogger {
     }
   }
 
+  /// Logs an informational message.
   static void info(String message) => _instance.log('INFO', message);
+
+  /// Logs an error message with optional error details.
   static void error(String message, [dynamic error]) =>
       _instance.log('ERROR', message, metadata: {'error': error.toString()});
+
+  /// Logs a debugging message.
   static void debug(String message) => _instance.log('DEBUG', message);
 }

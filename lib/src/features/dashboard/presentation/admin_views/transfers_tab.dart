@@ -3,6 +3,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 
+/// Provider for the [adminTransfersProvider] instance.
+///
+/// This provider creates and manages the application's transfers.
+/// It handles transfer operations such as fetching and approving transfers.
+///
+/// Usage:
+/// ```dart
+/// final adminTransfers = ref.watch(adminTransfersProvider);
+/// adminTransfers.when(
+///   data: (transfers) {
+///     // Handle transfers
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final adminTransfersProvider =
     FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
       final data = await Supabase.instance.client
@@ -15,6 +35,16 @@ final adminTransfersProvider =
 
       return List<Map<String, dynamic>>.from(data);
     });
+
+/// A widget that displays a list of transfer requests for the admin.
+///
+/// This widget displays a list of transfer requests that need to be approved or rejected.
+/// It uses the [adminTransfersProvider] to fetch the transfer requests.
+///
+/// Usage:
+/// ```dart
+/// const TransfersTab()
+/// ```
 
 class TransfersTab extends ConsumerWidget {
   const TransfersTab({super.key});
@@ -43,13 +73,23 @@ class TransfersTab extends ConsumerWidget {
         }
       }
     } catch (e) {
-      if (context.mounted)
+      if (context.mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('RPC Error: $e')));
+      }
     }
   }
 
+  /// Rejects a transfer request.
+  ///
+  /// This method rejects a transfer request by updating its status to 'rejected'.
+  /// It uses the [adminTransfersProvider] to fetch the transfer requests.
+  ///
+  /// Usage:
+  /// ```dart
+  /// _rejectTransfer(context, ref, requestId);
+  /// ```
   Future<void> _rejectTransfer(
     BuildContext context,
     WidgetRef ref,
@@ -68,21 +108,34 @@ class TransfersTab extends ConsumerWidget {
         ref.invalidate(adminTransfersProvider);
       }
     } catch (e) {
-      if (context.mounted)
+      if (context.mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     }
   }
 
+  /// Builds the [TransfersTab] widget.
+  ///
+  /// This method builds the [TransfersTab] widget by watching the [adminTransfersProvider] and displaying the transfer requests.
+  ///
+  /// Usage:
+  /// ```dart
+  /// @override
+  /// Widget build(BuildContext context, WidgetRef ref) {
+  ///   return TransfersTab();
+  /// }
+  /// ```
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final transfersAsync = ref.watch(adminTransfersProvider);
 
     return transfersAsync.when(
       data: (requests) {
-        if (requests.isEmpty)
+        if (requests.isEmpty) {
           return const Center(child: Text("No pending transfers."));
+        }
 
         return ListView.builder(
           itemCount: requests.length,

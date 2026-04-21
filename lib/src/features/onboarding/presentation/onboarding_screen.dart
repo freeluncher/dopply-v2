@@ -3,6 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../onboarding/data/onboarding_repository.dart';
 
+/// Screen for displaying onboarding content.
+///
+/// This screen displays a series of onboarding slides that introduce the user to the app.
+/// Users can swipe through the slides and tap "Next" to proceed to the next slide.
+/// The last slide has a "Get Started" button that completes the onboarding and navigates to the terms of service screen.
+///
+/// Usage:
+/// ```dart
+/// Navigator.push(context, MaterialPageRoute(builder: (context) => OnboardingScreen()));
+/// ```
+
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 

@@ -1,10 +1,31 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Provider for the [AuthRepository] instance.
+///
+/// This provider creates and manages the application's authentication repository.
+/// It handles authentication operations such as sign in, sign up, and sign out.
+///
+/// Usage:
+/// ```dart
+/// final authRepository = ref.read(authRepositoryProvider);
+/// authRepository.signIn(email: 'email', password: 'password');
+/// ```
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(Supabase.instance.client),
 );
 
+/// Repository for managing authentication operations.
+///
+/// This repository handles authentication operations such as sign in, sign up, and sign out.
+/// It uses the [SupabaseClient] to interact with the authentication service.
+///
+/// Usage:
+/// ```dart
+/// final authRepository = ref.read(authRepositoryProvider);
+/// authRepository.signIn(email: 'email', password: 'password');
+/// ```
+///
 class AuthRepository {
   final SupabaseClient _client;
 

@@ -2,6 +2,11 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/notifications_repository.dart';
 
+/// Provides a [NotificationsController] instance.
+///
+/// This provider is used to create a [NotificationsController] instance.
+/// It uses the [NotificationsRepository] to fetch and manage notifications.
+
 final notificationsControllerProvider =
     AsyncNotifierProvider<NotificationsController, List<Map<String, dynamic>>>(
       () {
@@ -9,6 +14,14 @@ final notificationsControllerProvider =
       },
     );
 
+/// Provides the count of unread notifications.
+///
+/// This provider is used to get the count of unread notifications.
+///
+/// Usage:
+/// ```dart
+/// final unreadCount = ref.watch(unreadCountProvider);
+/// ```
 final unreadCountProvider = Provider<int>((ref) {
   final notificationsAsync = ref.watch(notificationsControllerProvider);
   return notificationsAsync.maybeWhen(
@@ -17,6 +30,17 @@ final unreadCountProvider = Provider<int>((ref) {
     orElse: () => 0,
   );
 });
+
+/// Controller for managing notifications state and operations.
+///
+/// This controller handles fetching notifications, marking them as read,
+/// and managing the state of notifications.
+///
+/// Usage:
+/// ```dart
+/// final controller = ref.read(notificationsControllerProvider.notifier);
+/// controller.markAsRead(notificationId);
+/// ```
 
 class NotificationsController
     extends AsyncNotifier<List<Map<String, dynamic>>> {

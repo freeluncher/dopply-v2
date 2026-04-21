@@ -8,6 +8,23 @@ import '../../../core/services/offline_service.dart';
 import '../widgets/language_selector.dart';
 import '../../../../generated/l10n/app_localizations.dart';
 
+/// Screen for displaying and managing application settings.
+///
+/// This screen provides access to various settings and options for the user, including:
+/// - Account settings (profile)
+/// - Preferences (notifications, language)
+/// - Legal information (terms of service, privacy policy)
+/// - Diagnostics (connection status)
+/// - Actions (logout)
+///
+/// Usage:
+/// ```dart
+/// Navigator.push(
+///   context,
+///   MaterialPageRoute(builder: (context) => const SettingsScreen()),
+/// );
+/// ```
+
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 

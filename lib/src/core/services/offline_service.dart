@@ -4,10 +4,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Provider for the [OfflineService].
+///
+/// This provider creates and manages the lifecycle of the [OfflineService],
+/// making it available throughout the application via Riverpod.
 final offlineServiceProvider = Provider<OfflineService>(
   (ref) => OfflineService(),
 );
 
+/// Service for managing offline data storage and synchronization.
+///
+/// This service handles caching data for offline access and queuing
+/// write operations to be synchronized with the server when the
+/// device regains connectivity. It uses Hive for local storage and
+/// ConnectivityPlus to monitor network status.
+///
+/// Usage:
+/// ```dart
+/// final offlineService = ref.read(offlineServiceProvider);
+/// await offlineService.init();
+/// ```
 class OfflineService {
   late Box _cacheBox;
   late Box _queueBox;
@@ -106,10 +122,7 @@ class OfflineService {
         keysToDelete.add(_queueBox.keyAt(i));
       } catch (e) {
         print("OfflineService: Sync failed for item $i: $e");
-        // Keep in queue to retry later? Or robust retry strategy?
-        // For now, if it's a network error, we stop processing.
-        // If it's a unique constraint or logical error, maybe delete?
-        // Let's assume transient network errors are handled by isOnline check.
+        // Keep the item in the queue if sync fails
       }
     }
 

@@ -2,6 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Provider for the [doctorsProvider] instance.
+///
+/// This provider creates and manages the application's doctors.
+/// It handles doctor operations such as fetching and updating doctors.
+///
+/// Usage:
+/// ```dart
+/// final doctors = ref.watch(doctorsProvider);
+/// doctors.when(
+///   data: (doctors) {
+///     // Handle doctors
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final doctorsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((
   ref,
 ) async {
@@ -12,6 +32,15 @@ final doctorsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((
   return List<Map<String, dynamic>>.from(data);
 });
 
+/// A screen for requesting doctor transfers.
+///
+/// This widget allows users to request a transfer to a different doctor.
+/// The request is sent to the admin for approval.
+///
+/// Usage:
+/// ```dart
+/// const RequestTransferScreen()
+/// ```
 class RequestTransferScreen extends ConsumerStatefulWidget {
   const RequestTransferScreen({super.key});
 
@@ -20,6 +49,14 @@ class RequestTransferScreen extends ConsumerStatefulWidget {
       _RequestTransferScreenState();
 }
 
+/// State for the [RequestTransferScreen] widget.
+///
+/// This state holds the selected doctor ID and loading state.
+///
+/// Usage:
+/// ```dart
+/// final state = _RequestTransferScreenState();
+/// ```
 class _RequestTransferScreenState extends ConsumerState<RequestTransferScreen> {
   String? _selectedDoctorId;
   bool _isLoading = false;
@@ -48,24 +85,26 @@ class _RequestTransferScreenState extends ConsumerState<RequestTransferScreen> {
           .maybeSingle();
 
       if (currentAssignment == null) {
-        if (mounted)
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('You do not have a doctor assigned yet.'),
             ),
           );
+        }
         return;
       }
 
       final fromDoctorId = currentAssignment['doctor_id'];
 
       if (fromDoctorId == _selectedDoctorId) {
-        if (mounted)
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('You are already assigned to this doctor.'),
             ),
           );
+        }
         return;
       }
 
@@ -84,15 +123,27 @@ class _RequestTransferScreenState extends ConsumerState<RequestTransferScreen> {
         Navigator.pop(context);
       }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
+  /// Builds the [RequestTransferScreen] widget.
+  ///
+  /// This method builds the [RequestTransferScreen] widget by watching the [doctorsProvider] and displaying the doctors.
+  ///
+  /// Usage:
+  /// ```dart
+  /// @override
+  /// Widget build(BuildContext context, WidgetRef ref) {
+  ///   return RequestTransferScreen();
+  /// }
+  /// ```
   @override
   Widget build(BuildContext context) {
     final doctorsAsync = ref.watch(doctorsProvider);
@@ -115,7 +166,7 @@ class _RequestTransferScreenState extends ConsumerState<RequestTransferScreen> {
                     labelText: 'Select New Doctor',
                     border: OutlineInputBorder(),
                   ),
-                  value: _selectedDoctorId,
+                  initialValue: _selectedDoctorId,
                   items: doctors.map((doc) {
                     return DropdownMenuItem(
                       value: doc['id'].toString(),

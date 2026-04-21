@@ -12,6 +12,7 @@ const _githubOwner = 'freeluncher'; // TODO: Change this
 const _githubRepo = 'dopply-v2'; // TODO: Change this
 // If private repo, add header: 'Authorization': 'token YOUR_TOKEN'
 
+/// Information about a release.
 class ReleaseInfo {
   final String version;
   final String tagName;
@@ -26,6 +27,22 @@ class ReleaseInfo {
   });
 }
 
+/// Service for managing application updates.
+///
+/// This service checks for new releases on GitHub and handles OTA (Over-The-Air)
+/// updates for Android devices. It compares the current application version
+/// with the latest release version and provides functionality to download and
+/// install updates.
+///
+/// Usage:
+/// ```dart
+/// final updateService = UpdateService();
+/// final release = await updateService.checkForUpdate();
+/// if (release != null) {
+///   // Show update dialog
+///   await updateService.runUpdate(release.downloadUrl);
+/// }
+/// ```
 class UpdateService {
   Future<ReleaseInfo?> checkForUpdate() async {
     // 1. Platform Check

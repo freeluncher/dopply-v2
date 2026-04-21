@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'admin_views/notifications_tab.dart';
 import 'admin_views/overview_tab.dart';
 import 'admin_views/users_tab.dart';
 import 'admin_views/transfers_tab.dart';
 
+/// A dashboard screen for administrators to manage the application.
+///
+/// This widget provides a tab-based interface for administrators to manage users, transfers, notifications, and view an overview of the application.
+///
+/// Usage:
+/// ```dart
+/// const AdminDashboardScreen()
+/// ```
+///
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
 

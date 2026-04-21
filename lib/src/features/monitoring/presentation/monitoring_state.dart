@@ -1,5 +1,15 @@
 import 'package:equatable/equatable.dart';
 
+/// Enum for monitoring status.
+///
+/// This enum represents the status of the monitoring process.
+///
+/// Usage:
+/// ```dart
+/// MonitoringStatus.idle;
+/// MonitoringStatus.monitoring;
+/// MonitoringStatus.completed;
+/// ```
 enum MonitoringStatus { idle, monitoring, completed }
 
 enum DeviceConnectionStatus { disconnected, scanning, connected }

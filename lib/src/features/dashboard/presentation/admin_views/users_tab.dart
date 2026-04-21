@@ -2,6 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Provider for the [adminUsersProvider] instance.
+///
+/// This provider creates and manages the application's users.
+/// It handles user operations such as fetching and updating users.
+///
+/// Usage:
+/// ```dart
+/// final adminUsers = ref.watch(adminUsersProvider('search query'));
+/// adminUsers.when(
+///   data: (users) {
+///     // Handle users
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final adminUsersProvider = FutureProvider.autoDispose
     .family<List<Map<String, dynamic>>, String>((ref, query) async {
       var dbQuery = Supabase.instance.client.from('profiles').select('*');
@@ -14,6 +34,16 @@ final adminUsersProvider = FutureProvider.autoDispose
       return List<Map<String, dynamic>>.from(data);
     });
 
+/// Tab for managing users in the admin dashboard.
+///
+/// This widget displays a list of users that can be managed by the admin.
+/// It uses the [adminUsersProvider] to fetch the users.
+///
+/// Usage:
+/// ```dart
+/// const UsersTab()
+/// ```
+
 class UsersTab extends ConsumerStatefulWidget {
   const UsersTab({super.key});
 
@@ -21,6 +51,15 @@ class UsersTab extends ConsumerStatefulWidget {
   ConsumerState<UsersTab> createState() => _UsersTabState();
 }
 
+/// State for the [UsersTab] widget.
+///
+/// This state manages the users tab to the user.
+/// It handles user operations such as fetching and updating users.
+///
+/// Usage:
+/// ```dart
+/// const UsersTab();
+/// ```
 class _UsersTabState extends ConsumerState<UsersTab> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
@@ -36,6 +75,18 @@ class _UsersTabState extends ConsumerState<UsersTab> {
       _searchQuery = _searchController.text.trim();
     });
   }
+
+  /// Builds the [UsersTab] widget.
+  ///
+  /// This method builds the [UsersTab] widget by watching the [adminUsersProvider] and displaying the users.
+  ///
+  /// Usage:
+  /// ```dart
+  /// @override
+  /// Widget build(BuildContext context, WidgetRef ref) {
+  ///   return UsersTab();
+  /// }
+  /// ```
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +115,9 @@ class _UsersTabState extends ConsumerState<UsersTab> {
         Expanded(
           child: usersAsync.when(
             data: (users) {
-              if (users.isEmpty)
+              if (users.isEmpty) {
                 return const Center(child: Text("No users found."));
+              }
 
               return ListView.builder(
                 itemCount: users.length,
@@ -134,6 +186,16 @@ class _UsersTabState extends ConsumerState<UsersTab> {
     );
   }
 
+  /// Shows a dialog to edit a user.
+  ///
+  /// This dialog allows the user to edit a user's information.
+  /// It uses the [adminUsersProvider] to fetch the users.
+  ///
+  /// Usage:
+  /// ```dart
+  /// _showEditUserDialog(context, ref, user);
+  /// ```
+
   Future<void> _showEditUserDialog(
     BuildContext context,
     WidgetRef ref,
@@ -157,7 +219,7 @@ class _UsersTabState extends ConsumerState<UsersTab> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
-                  value: selectedRole,
+                  initialValue: selectedRole,
                   items: const [
                     DropdownMenuItem(value: 'patient', child: Text('Patient')),
                     DropdownMenuItem(value: 'doctor', child: Text('Doctor')),
@@ -211,6 +273,16 @@ class _UsersTabState extends ConsumerState<UsersTab> {
       ),
     );
   }
+
+  /// Confirms the deletion of a user.
+  ///
+  /// This method confirms the deletion of a user by calling the [deleteUser] method.
+  /// It uses the [adminUsersProvider] to fetch the users.
+  ///
+  /// Usage:
+  /// ```dart
+  /// _confirmDeleteUser(context, ref, user);
+  /// ```
 
   Future<void> _confirmDeleteUser(
     BuildContext context,

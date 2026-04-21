@@ -2,6 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Provider for the [adminStatsProvider] instance.
+///
+/// This provider creates and manages the application's statistics.
+/// It handles statistics operations such as fetching and calculating statistics.
+///
+/// Usage:
+/// ```dart
+/// final adminStats = ref.watch(adminStatsProvider);
+/// adminStats.when(
+///   data: (stats) {
+///     // Handle statistics
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final adminStatsProvider = FutureProvider.autoDispose<Map<String, int>>((
   ref,
 ) async {
@@ -25,6 +45,16 @@ final adminStatsProvider = FutureProvider.autoDispose<Map<String, int>>((
     'pending_transfers': results[3],
   };
 });
+
+/// The [OverviewTab] widget displays an overview of the application's statistics.
+///
+/// This widget shows key metrics such as total users, patients, measurements, and pending transfers.
+/// It uses the [adminStatsProvider] to fetch and display the statistics.
+///
+/// Usage:
+/// ```dart
+/// OverviewTab()
+/// ```
 
 class OverviewTab extends ConsumerWidget {
   const OverviewTab({super.key});
@@ -74,6 +104,21 @@ class OverviewTab extends ConsumerWidget {
   }
 }
 
+/// A card widget that displays a statistic with an icon and title.
+///
+/// This widget displays a statistic with an icon and title.
+/// It is used in the [OverviewTab] widget to display key metrics.
+///
+/// Usage:
+/// ```dart
+/// _StatsCard(
+///   title: 'Total Users',
+///   value: '100',
+///   icon: Icons.people,
+///   color: Colors.blue,
+/// )
+/// ```
+
 class _StatsCard extends StatelessWidget {
   final String title;
   final String value;
@@ -98,7 +143,7 @@ class _StatsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 32),

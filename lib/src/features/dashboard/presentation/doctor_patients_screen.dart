@@ -3,6 +3,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Provider for the [doctorPatientsProvider] instance.
+///
+/// This provider creates and manages the application's doctor patients.
+/// It handles doctor patients operations such as fetching and updating doctor patients.
+///
+/// Usage:
+/// ```dart
+/// final doctorPatients = ref.watch(doctorPatientsProvider);
+/// doctorPatients.when(
+///   data: (doctorPatients) {
+///     // Handle doctor patients
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final doctorPatientsProvider =
     StreamProvider.autoDispose<List<Map<String, dynamic>>>((ref) {
       final user = Supabase.instance.client.auth.currentUser;

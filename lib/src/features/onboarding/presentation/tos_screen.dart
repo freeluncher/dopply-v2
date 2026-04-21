@@ -3,6 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../onboarding/data/onboarding_repository.dart';
 
+/// Screen for displaying the Terms of Service.
+///
+/// This screen displays the terms of service for the Dopply application.
+/// Users must read and accept the terms before they can continue using the app.
+///
+/// Usage:
+/// ```dart
+/// Navigator.push(context, MaterialPageRoute(builder: (context) => TosScreen()));
+/// ```
+
 class TosScreen extends ConsumerWidget {
   const TosScreen({super.key});
 

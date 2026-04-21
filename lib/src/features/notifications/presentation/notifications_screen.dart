@@ -3,6 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'notifications_controller.dart';
 
+/// Screen for displaying notifications.
+///
+/// This screen displays a list of notifications. Each notification can be marked as read or unread.
+/// The screen also provides an option to mark all notifications as read.
+
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
 
@@ -52,7 +57,7 @@ class NotificationsScreen extends ConsumerWidget {
               final date = DateTime.parse(n['created_at']);
 
               return Container(
-                color: isUnread ? Colors.blue.withOpacity(0.1) : null,
+                color: isUnread ? Colors.blue.withValues(alpha: 0.1) : null,
                 child: ListTile(
                   leading: const Icon(Icons.info_outline),
                   title: Text(

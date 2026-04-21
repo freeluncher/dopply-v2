@@ -1,3 +1,4 @@
+/// Custom exception for server-related errors.
 class ServerException implements Exception {
   final String message;
   final int? statusCode;

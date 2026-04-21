@@ -3,6 +3,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 
+/// Provider for the [requestsProvider] instance.
+///
+/// This provider creates and manages the application's requests.
+/// It handles requests operations such as fetching and updating requests.
+///
+/// Usage:
+/// ```dart
+/// final requests = ref.watch(requestsProvider);
+/// requests.when(
+///   data: (requests) {
+///     // Handle requests
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final requestsProvider = StreamProvider.autoDispose<List<Map<String, dynamic>>>((
   ref,
 ) {

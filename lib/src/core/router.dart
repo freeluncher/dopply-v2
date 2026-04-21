@@ -21,6 +21,16 @@ import '../features/onboarding/data/onboarding_repository.dart';
 import '../features/splash/presentation/splash_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 
+/// Provider for the [GoRouter] instance.
+///
+/// This provider creates and manages the application's routing configuration.
+/// It handles route definitions, navigation logic, and authentication guards.
+///
+/// Usage:
+/// ```dart
+/// final router = ref.read(routerProvider);
+/// router.go('/dashboard');
+/// ```
 final routerProvider = Provider<GoRouter>((ref) {
   final onboardingRepo = ref.watch(onboardingRepositoryProvider);
   return GoRouter(
@@ -60,8 +70,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) {
               final idStr = state.pathParameters['recordId'];
               final id = int.tryParse(idStr ?? ''); // error handling if null
-              if (id == null)
+              if (id == null) {
                 return const Scaffold(body: Center(child: Text("Invalid ID")));
+              }
               return RecordDetailScreen(recordId: id);
             },
           ),
@@ -147,6 +158,19 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
+/// Widget that guards routes requiring authentication.
+///
+/// This widget listens for authentication state changes and redirects
+/// the user to the login screen if they are signed out.
+///
+/// Usage:
+/// ```dart
+/// GoRoute(
+///   path: '/dashboard',
+///   builder: (context, state) => const _AuthGuard(child: DashboardScreen()),
+/// );
+/// ```
+///
 class _AuthGuard extends StatefulWidget {
   final Widget child;
   const _AuthGuard({required this.child});

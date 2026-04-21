@@ -3,7 +3,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 
+/// Provider for the [adminNotificationsProvider] instance.
+///
+/// This provider creates and manages the application's notifications.
+/// It handles notification operations such as fetching and sending notifications.
+///
+/// Usage:
+/// ```dart
+/// final adminNotifications = ref.watch(adminNotificationsProvider);
+/// adminNotifications.when(
+///   data: (notifications) {
+///     // Handle notifications
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final adminNotificationsProvider =
+    /// Provider for the [adminNotificationsProvider] instance.
     FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
       final data = await Supabase.instance.client
           .from('notifications')
@@ -13,6 +34,15 @@ final adminNotificationsProvider =
       return List<Map<String, dynamic>>.from(data);
     });
 
+/// Widget that displays the notifications tab.
+///
+/// This widget displays the notifications tab to the user.
+/// It handles notification operations such as fetching and sending notifications.
+///
+/// Usage:
+/// ```dart
+/// const NotificationsTab();
+/// ```
 class NotificationsTab extends ConsumerStatefulWidget {
   const NotificationsTab({super.key});
 
@@ -20,6 +50,15 @@ class NotificationsTab extends ConsumerStatefulWidget {
   ConsumerState<NotificationsTab> createState() => _NotificationsTabState();
 }
 
+/// State for the [NotificationsTab] widget.
+///
+/// This state manages the notifications tab to the user.
+/// It handles notification operations such as fetching and sending notifications.
+///
+/// Usage:
+/// ```dart
+/// const NotificationsTab();
+/// ```
 class _NotificationsTabState extends ConsumerState<NotificationsTab> {
   @override
   Widget build(BuildContext context) {
@@ -40,7 +79,7 @@ class _NotificationsTabState extends ConsumerState<NotificationsTab> {
           return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: notifications.length,
-            separatorBuilder: (_, __) => const Divider(),
+            separatorBuilder: (_, _) => const Divider(),
             itemBuilder: (context, index) {
               final notif = notifications[index];
               final recipient = notif['recipient'];
@@ -79,6 +118,14 @@ class _NotificationsTabState extends ConsumerState<NotificationsTab> {
     );
   }
 
+  /// Shows a dialog to create a new notification.
+  ///
+  /// This dialog allows the user to create a new notification and send it to a specific user or broadcast it to all users.
+  ///
+  /// Usage:
+  /// ```dart
+  /// _showCreateNotificationDialog(context, ref);
+  /// ```
   Future<void> _showCreateNotificationDialog(
     BuildContext context,
     WidgetRef ref,
@@ -166,8 +213,9 @@ class _NotificationsTabState extends ConsumerState<NotificationsTab> {
               ElevatedButton(
                 onPressed: () async {
                   if (titleController.text.isEmpty ||
-                      messageController.text.isEmpty)
+                      messageController.text.isEmpty) {
                     return;
+                  }
 
                   try {
                     if (isBroadcast) {

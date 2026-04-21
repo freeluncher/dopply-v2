@@ -74,7 +74,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     // Check docs: "Use initialValue to set the initial value...". If we want to change it dynamically, we need value.
                     // WE ARE changing it dynamically.
                     // So I will ignore the deprecation for now or use // ignore: deprecated_member_use
-                    value: _role,
+                    initialValue: _role,
                     decoration: const InputDecoration(
                       labelText: 'I am a...',
                       prefixIcon: Icon(Icons.badge_outlined),

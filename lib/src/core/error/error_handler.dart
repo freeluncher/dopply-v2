@@ -33,6 +33,7 @@ class ErrorHandler {
     _controller.add(failure);
   }
 
+  /// Maps an [Exception] to a [Failure].
   Failure _mapExceptionToFailure(Object error) {
     if (error is Failure) return error;
 
@@ -66,6 +67,7 @@ class ErrorHandler {
     return UnknownFailure(error.toString());
   }
 
+  /// Disposes the error handler and closes the error stream.
   void dispose() {
     _controller.close();
   }

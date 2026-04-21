@@ -3,12 +3,30 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Service for managing Firebase Cloud Messaging (FCM) notifications.
+///
+/// This service handles FCM token management, permission requests,
+/// and synchronization with the Supabase database.
+///
+/// Usage:
+/// ```dart
+/// final fcmService = FcmService(supabase);
+/// await fcmService.initialize();
+/// ```
 class FcmService {
   final SupabaseClient _supabase;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   FcmService(this._supabase);
 
+  /// Initializes the FCM service.
+  ///
+  /// This method should be called during application startup after Firebase
+  /// initialization. It requests notification permissions, retrieves the FCM
+  /// token, saves it to the database, and sets up listeners for token
+  /// refreshes and incoming messages.
+  ///
+  /// Throws [FirebaseException] if Firebase initialization fails.
   Future<void> initialize() async {
     // 1. Request Permission
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
@@ -63,6 +81,12 @@ class FcmService {
     });
   }
 
+  /// Saves the FCM token to the Supabase database.
+  ///
+  /// This method updates the `fcm_token` column in the `profiles` table
+  /// with the provided token for the current user.
+  ///
+  /// Throws [Exception] if the token cannot be saved.
   Future<void> _saveTokenToDatabase(String token) async {
     final userId = _supabase.auth.currentUser?.id;
     if (userId == null) return;

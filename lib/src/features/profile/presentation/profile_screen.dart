@@ -6,6 +6,27 @@ import 'package:image_picker/image_picker.dart';
 import 'profile_controller.dart';
 import '../../../../generated/l10n/app_localizations.dart';
 
+/// Screen for displaying and editing user profile information.
+///
+/// This screen allows users to view and edit their profile information, including:
+/// - Full name
+/// - Email
+/// - Role (doctor or patient)
+/// - Specialization (for doctors)
+/// - Address (for patients)
+/// - Medical notes (for patients)
+/// - Last Menstrual Period (LMP) date (for patients)
+///
+/// The screen also provides functionality to upload a profile picture.
+///
+/// Usage:
+/// ```dart
+/// Navigator.push(
+///   context,
+///   MaterialPageRoute(builder: (context) => const ProfileScreen()),
+/// );
+/// ```
+
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
@@ -37,8 +58,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   // Effect to populate controllers when data loads
   void _populateControllers(Map<String, dynamic> data) {
-    if (_nameController.text.isEmpty)
+    if (_nameController.text.isEmpty) {
       _nameController.text = data['full_name'] ?? '';
+    }
 
     if (data['role'] == 'doctor') {
       if (_specController.text.isEmpty && data['specialization'] != null) {
@@ -47,10 +69,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     } else if (data['role'] == 'patient') {
       final pData = data['patient_data'];
       if (pData != null) {
-        if (_addressController.text.isEmpty)
+        if (_addressController.text.isEmpty) {
           _addressController.text = pData['address'] ?? '';
-        if (_notesController.text.isEmpty)
+        }
+        if (_notesController.text.isEmpty) {
           _notesController.text = pData['medical_note'] ?? '';
+        }
 
         if (_hphtDate == null && pData['hpht'] != null) {
           _hphtDate = DateTime.parse(pData['hpht']);
@@ -91,10 +115,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
 
     final data = state.data;
-    if (data == null)
+    if (data == null) {
       return const Scaffold(
         body: Center(child: Text("Failed to load profile")),
       );
+    }
 
     final role = data['role'];
 

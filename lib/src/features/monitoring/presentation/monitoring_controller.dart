@@ -8,6 +8,14 @@ import '../../../core/services/offline_service.dart';
 import '../data/monitoring_repository.dart';
 import 'monitoring_state.dart';
 
+/// Provides a [MonitoringController] instance.
+///
+/// This provider is used to create a [MonitoringController] instance.
+///
+/// Usage:
+/// ```dart
+/// final monitoringController = ref.watch(monitoringControllerProvider(patientId));
+/// ```
 final monitoringControllerProvider =
     StateNotifierProvider.family<MonitoringController, MonitoringState, int?>((
       ref,
@@ -18,6 +26,14 @@ final monitoringControllerProvider =
       return MonitoringController(repository, offlineService, patientId);
     });
 
+/// Controller for monitoring BPM data.
+///
+/// This class handles BPM data monitoring and management.
+///
+/// Usage:
+/// ```dart
+/// final monitoringController = ref.watch(monitoringControllerProvider(patientId));
+/// ```
 class MonitoringController extends StateNotifier<MonitoringState> {
   final MonitoringRepository _repository;
   final OfflineService _offlineService;
@@ -214,6 +230,14 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     }
   }
 
+  /// Connects to the BLE device.
+  ///
+  /// This method connects to the BLE device and sets up listeners for BPM data.
+  ///
+  /// Usage:
+  /// ```dart
+  /// connectToDevice();
+  /// ```
   Future<void> connectToDevice() async {
     if (!mounted) return;
 
@@ -297,6 +321,14 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     });
   }
 
+  /// Handles a new BPM value.
+  ///
+  /// This method handles a new BPM value by updating the state with the new BPM.
+  ///
+  /// Usage:
+  /// ```dart
+  /// _handleNewBpm(120);
+  /// ```
   void _handleNewBpm(int newBpm) {
     if (!mounted) return;
 
@@ -311,6 +343,14 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     state = newState;
   }
 
+  /// Stops the monitoring process.
+  ///
+  /// This method stops the monitoring process by canceling the timer and updating the state.
+  ///
+  /// Usage:
+  /// ```dart
+  /// stopMonitoring();
+  /// ```
   void stopMonitoring() {
     _timer?.cancel();
     if (mounted) {
@@ -318,6 +358,14 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     }
   }
 
+  /// Saves the monitoring record.
+  ///
+  /// This method saves the monitoring record to the database.
+  ///
+  /// Usage:
+  /// ```dart
+  /// saveRecord();
+  /// ```
   Future<void> saveRecord({String? notes}) async {
     try {
       final user = Supabase.instance.client.auth.currentUser;
@@ -410,6 +458,7 @@ class MonitoringController extends StateNotifier<MonitoringState> {
     }
   }
 
+  /// Disposes the controller.
   @override
   void dispose() {
     _timer?.cancel();

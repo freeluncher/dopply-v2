@@ -6,14 +6,32 @@ import '../../auth/data/auth_repository.dart';
 import '../../notifications/presentation/notification_bell.dart';
 import '../../../core/services/update_service.dart';
 import '../../shared/widgets/update_dialog.dart';
-
 import 'doctor_requests_screen.dart';
 import '../../../core/error/error_handler.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../../../generated/l10n/app_localizations.dart';
 
-// Controller to fetch user profile
+/// Provider for the [userProfileProvider] instance.
+///
+/// This provider creates and manages the application's user profile.
+/// It handles user operations such as fetching and updating user profiles.
+///
+/// Usage:
+/// ```dart
+/// final userProfile = ref.watch(userProfileProvider);
+/// userProfile.when(
+///   data: (profile) {
+///     // Handle profile
+///   },
+///   error: (error, stack) {
+///     // Handle error
+///   },
+///   loading: () {
+///     // Handle loading
+///   },
+/// );
+/// ```
 final userProfileProvider = FutureProvider.autoDispose<Map<String, dynamic>>((
   ref,
 ) async {
@@ -48,6 +66,14 @@ final userProfileProvider = FutureProvider.autoDispose<Map<String, dynamic>>((
   return profile;
 });
 
+/// A dashboard screen for users to monitor their health and manage their profile.
+///
+/// This widget displays a tab-based interface for users to monitor their health, manage their profile, and view their assigned doctor.
+///
+/// Usage:
+/// ```dart
+/// const DashboardScreen()
+/// ```
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 

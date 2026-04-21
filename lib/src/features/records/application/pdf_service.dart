@@ -3,6 +3,18 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
+/// Service for generating and printing PDF reports.
+///
+/// This service provides functionality to generate PDF reports for fetal heart rate monitoring records.
+/// It can generate a PDF document with the record details, patient information, and a chart.
+/// The generated PDF can then be printed or saved.
+///
+/// Usage:
+/// ```dart
+/// final pdfService = PdfService();
+/// await pdfService.generateAndPrint(record, patientProfile);
+/// ```
+
 class PdfService {
   Future<void> generateAndPrint(
     Map<String, dynamic> record,

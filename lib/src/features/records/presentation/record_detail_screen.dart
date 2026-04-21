@@ -5,6 +5,17 @@ import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../application/pdf_service.dart';
 
+/// Provider for fetching record details.
+///
+/// This provider fetches the details of a specific record from the database.
+/// It uses the [recordId] to query the 'records' table and returns a [Map<String, dynamic>] containing the record data.
+/// The provider is auto-disposed when no longer needed.
+///
+/// Usage:
+/// ```dart
+/// final recordAsync = ref.watch(recordDetailProvider(recordId));
+/// ```
+
 final recordDetailProvider = FutureProvider.family
     .autoDispose<Map<String, dynamic>, int>((ref, recordId) async {
       final data = await Supabase.instance.client
@@ -70,14 +81,16 @@ class RecordDetailScreen extends ConsumerWidget {
                     doctorName: doctorName,
                   );
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to generate PDF: $e')),
-                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to generate PDF: $e')),
+                    );
+                  }
                 }
               },
             ),
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
         ],
       ),

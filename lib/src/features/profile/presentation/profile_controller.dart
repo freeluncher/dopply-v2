@@ -3,6 +3,19 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/offline_service.dart';
 import 'dart:io';
 
+/// Controller for managing profile state and operations.
+///
+/// This controller handles loading, updating, and uploading profile data.
+/// It uses the [OfflineService] to check for offline status and the [SupabaseClient] to interact with the database.
+///
+/// Usage:
+/// ```dart
+/// final controller = ref.read(profileControllerProvider.notifier);
+/// controller.loadProfile();
+/// controller.updateProfile(...);
+/// controller.uploadAvatar(...);
+/// ```
+
 // State class
 class ProfileState {
   final bool isLoading;

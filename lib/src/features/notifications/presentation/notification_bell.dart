@@ -3,6 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'notifications_controller.dart';
 
+/// Widget that displays a notification bell icon with a badge for unread notifications.
+///
+/// This widget displays a notification bell icon and a badge that shows the number of unread notifications.
+/// When the user taps the bell icon, it navigates to the notifications screen.
+///
+/// Usage:
+/// ```dart
+/// NotificationBell();
+/// ```
+
 class NotificationBell extends ConsumerWidget {
   const NotificationBell({super.key});
 

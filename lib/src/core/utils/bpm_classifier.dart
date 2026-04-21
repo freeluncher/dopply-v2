@@ -1,3 +1,6 @@
+/// Classifies BPM (Beats Per Minute) data based on gestational age.
+///
+/// This classifier follows the same rules as the backend implementation.
 class BpmClassifier {
   static const int _bradycardiaThreshold = 110;
   static const int _tachycardiaThreshold = 160;

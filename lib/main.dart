@@ -9,6 +9,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'src/features/onboarding/data/onboarding_repository.dart';
 import 'src/app.dart';
 
+/// The main entry point of the Dopply application.
+///
+/// This function initializes the application, including:
+/// - Flutter binding
+/// - Environment variables
+/// - Supabase client
+/// - Firebase services
+/// - Offline storage
+/// - Shared preferences
+/// - Riverpod providers
+///
+/// It then runs the DopplyApp widget.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
